@@ -52,7 +52,7 @@ class User {
           that.salary = row.salary;
           that.groups = (row.groups) ? row.groups.split(',').map((n) => { return parseInt(n); }) : [];
           // Update API key
-          let apiKey = this._generateAPIKey();
+          let apiKey = that._generateAPIKey();
           let now = Math.floor(Date.now() / 1000);
           let expires = now + 60 * config['keyValidMinutes'];
           that.db.run(
