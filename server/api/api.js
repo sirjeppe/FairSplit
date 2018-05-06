@@ -227,9 +227,24 @@ let api = {
     }
   },
 
+  _verifyTransactionBody: function(body) {
+    if (
+      typeof(body.transactionID) === 'undefined'
+      || typeof(body.amount) === 'undefined'
+      || typeof(body.title) === 'undefined'
+      || typeof(body.comment) === 'undefined'
+      || typeof(body.groupID) === 'undefined'
+      || typeof(body.userID) === 'undefined'
+      || typeof(body.datetime) === 'undefined'
+    ) {
+      return false;
+    }
+    return true;
+  },
+
   transaction: function(db, request, response, body, callback) {
     if (request.method === 'POST') {
-      if (typeof(body.amount) === 'undefined' || typeof(body.comment) === 'undefined' || typeof(body.groupID) === 'undefined' || typeof(body.userID) === 'undefined') {
+      if (!api._verifyTransactionBody(body)) {
         callback(Error.ErrorCodes.MALFORMED_REQUEST);
       } else {
         let t = new Transaction.Transaction();
@@ -254,6 +269,32 @@ let api = {
         } else {
           callback(Error.ErrorCodes.MALFORMED_REQUEST);
         }
+      }
+    } else if (request.method === 'PUT') {
+      if (!api._verifyTransactionBody(body)) {
+        callback(Error.ErrorCodes.MALFORMED_REQUEST);
+      } else {
+        let t = new Transaction.Transaction();
+        t.useDB(db);
+        t.transactionID = body.transactionID;
+        t.amount = body.amount;
+        t.title = body.title;
+        t.comment = body.comment;
+        t.groupID = body.groupID;
+        t.userID = body.userID;
+        t.save((res) => {
+          callback(res);
+        });
+      }
+    } else if (request.method === 'DELETE') {
+      let pathArray = request.url.split('/');
+      let userID = parseInt(pathArray[pathArray.length - 1]);
+      if (userID > 0) {
+        Transaction.Transaction.deleteByID(db, userID, (res) => {
+          callback(res);
+        });
+      } else {
+        callback(Error.ErrorCodes.MALFORMED_REQUEST);
       }
     }
   }
