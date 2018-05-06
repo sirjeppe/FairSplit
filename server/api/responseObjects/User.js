@@ -46,7 +46,7 @@ class User {
       } else {
         let hash = crypto.createHash('sha256');
         hash.update(password);
-        if (hash.digest('hex') == row.password) {
+        if (hash.digest('hex') === row.password) {
           that.userID = row.userID;
           that.userName = row.userName;
           that.salary = row.salary;
@@ -61,12 +61,11 @@ class User {
             function(err) {
               if (err) {
                 callback(err);
-                return;
               } else {
                 that.apiKey = apiKey;
                 that.keyValidTo = expires;
+                callback(that);
               }
-              callback(that);
             }
           );
         } else {

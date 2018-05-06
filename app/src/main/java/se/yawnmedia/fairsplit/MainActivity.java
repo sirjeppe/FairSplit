@@ -21,6 +21,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
 
     private User currentUser;
     private Group currentGroup;
+    private ArrayList<User> allUsers = new ArrayList<>();
+    private ArrayList<Group> allGroups = new ArrayList<>();
 
 //    private static final int RC_OCR_CAPTURE = 9003;
     private TransactionAdapter transactionAdapter;
@@ -46,8 +49,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void switchUser(String user) {
-        for (User groupUser : currentGroup.members) {
-            if (groupUser.userName.equals(user)) {
+        for (int memberID : currentGroup.members) {
+            User groupUser = User.findUserByID(memberID, allUsers);
+            if (groupUser != null && groupUser.userName.equals(user)) {
                 transactionAdapter.clear();
                 for (Transaction transaction : groupUser.transactions) {
                     transactionAdapter.add(transaction);
@@ -130,8 +134,16 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (currentGroup == null) {
-            if (currentUser.groups.size() > 0) {
-                currentGroup = new Group(currentUser.groups.get(0));
+            try {
+                JSONArray intentGroups = new JSONArray(getIntent().getExtras().getString("groups"));
+                if (intentGroups != null) {
+                    for (int g = 0; g < intentGroups.length(); g++) {
+                        JSONObject addGroup = intentGroups.getJSONObject(g);
+                        allGroups.add(new Group(addGroup));
+                    }
+                }
+            } catch (Exception ex) {
+                Log.e("currentGroup == null", ex.getMessage());
             }
         }
 
@@ -242,8 +254,9 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.action_select_user:
                     subMenu = item.getSubMenu();
                     subMenu.clear();
-                    for (User user : currentGroup.members) {
-                        subMenu.add(user.userName);
+                    for (int m : currentGroup.members) {
+                        User u = User.findUserByID(m, allUsers);
+                        subMenu.add(u.userName);
                     }
                     return true;
 

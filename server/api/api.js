@@ -110,7 +110,16 @@ let api = {
           if (handler === 'user') {
             api.user(db, request, response, body);
           } else if (handler === 'group') {
-            api.group(db, request, response, body);
+            api.group(db, request, response, body, (res) => {
+              if (res instanceof Group.Group) {
+                let r = new Group.GroupResponse();
+                r.requestUri = request.url;
+                r.data.push(res);
+                api.respond(request, response, r);
+              } else {
+                api.respond(request, response, res);
+              }
+            });
           } else if (handler === 'transaction') {
             api.transaction(db, request, response, body);
           } else {
@@ -156,7 +165,7 @@ let api = {
     if (typeof(body.userName) === 'undefined' || typeof(body.password) === 'undefined' || typeof(body.passwordAgain) === 'undefined') {
       callback(Error.ErrorCodes.MALFORMED_REQUEST);
     } else {
-      if (body.password != body.passwordAgain) {
+      if (body.password !== body.passwordAgain) {
         callback(Error.ErrorCodes.PASSWORDS_MISMATCH);
         return;
       }
@@ -168,56 +177,57 @@ let api = {
     }
   },
 
-  user: function(db, request, response, body) {
-    let u = new User.User();
-    u.useDB(db);
-    if (u) {
-      let r = new User.UserResponse();
-      r.requestUri = request.url;
-      r.data.push(u);
+  // user: function(db, request, response, body, callback) {
+  //   let u = new User.User();
+  //   u.useDB(db);
+  //   if (u) {
+  //     let r = new User.UserResponse();
+  //     r.requestUri = request.url;
+  //     r.data.push(u);
 
-      response.writeHead(200, {'Content-Type': 'application/json'});
-      response.write(JSON.stringify(r));
-      response.end();
-      return true;
-    } else {
-      return 'User not found or password mismatch.';
-    }
-  },
+  //     response.writeHead(200, {'Content-Type': 'application/json'});
+  //     response.write(JSON.stringify(r));
+  //     response.end();
+  //     return true;
+  //   } else {
+  //     return 'User not found or password mismatch.';
+  //   }
+  // },
 
-  group: function(db, request, response, body) {
-    let g = new Group.Group();
-    g.useDB(db);
-    if (g) {
-      let r = new Group.GroupResponse();
-      r.requestUri = request.url;
-
-      response.writeHead(200, {'Content-Type': 'application/json'});
-      response.write(JSON.stringify(r));
-      response.end();
-      return true;
-    } else {
-      return 'User not found or password mismatch.';
-    }
-  },
-
-  transaction: function(db, request, response, body) {
-    if (request.method === 'POST') {
-      let t = new Transaction.Transaction(body.amount, body.comment);
-      t.useDB(db);
-      if (t) {
-        let r = new Transaction.TransactionResponse();
-        r.requestUri = request.url;
-
-        response.writeHead(200, {'Content-Type': 'application/json'});
-        response.write(JSON.stringify(r));
-        response.end();
-        return true;
+  group: function(db, request, response, body, callback) {
+    if (request.method === 'GET') {
+      let pathArray = request.url.split('/');
+      let groupID = parseInt(pathArray[pathArray.length - 1]);
+      console.log('GET /group ByID', groupID);
+      if (groupID > 0) {
+        let g = new Group.Group();
+        g.useDB(db);
+        g.getByID(groupID, (res) => {
+          callback(res);
+        });
       } else {
-        return 'User not found or password mismatch.';
+        callback(Error.ErrorCodes.MALFORMED_REQUEST);
       }
     }
-  }
+  }//,
+
+  // transaction: function(db, request, response, body) {
+  //   if (request.method === 'POST') {
+  //     let t = new Transaction.Transaction(body.amount, body.comment);
+  //     t.useDB(db);
+  //     if (t) {
+  //       let r = new Transaction.TransactionResponse();
+  //       r.requestUri = request.url;
+
+  //       response.writeHead(200, {'Content-Type': 'application/json'});
+  //       response.write(JSON.stringify(r));
+  //       response.end();
+  //       return true;
+  //     } else {
+  //       return 'User not found or password mismatch.';
+  //     }
+  //   }
+  // }
 };
 
 module.exports = {

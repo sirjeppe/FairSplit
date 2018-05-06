@@ -23,16 +23,15 @@ public class User {
             this.salary = user.getInt("salary");
             this.apiKey = user.getString("apiKey");
             this.keyValidTo = user.getLong("keyValidTo");
+            this.groups = new ArrayList<>();
             JSONArray groups = user.getJSONArray("groups");
-            if (groups.length() == 0) {
-                this.groups = new ArrayList<Integer>();
-            } else {
+            if (groups.length() > 0) {
                 for (int g = 0; g < groups.length(); g++) {
                     this.groups.add(groups.getInt(g));
                 }
             }
         } catch (Exception ex) {
-            Log.e("tag", ex.getMessage());
+            Log.e("User(JSONObject)", ex.getMessage());
         }
     }
 
@@ -44,16 +43,15 @@ public class User {
             this.salary = userObject.getInt("salary");
             this.apiKey = userObject.getString("apiKey");
             this.keyValidTo = userObject.getLong("keyValidTo");
+            this.groups = new ArrayList<>();
             JSONArray groups = userObject.getJSONArray("groups");
-            if (groups.length() == 0) {
-                this.groups = new ArrayList<Integer>();
-            } else {
+            if (groups.length() > 0) {
                 for (int g = 0; g < groups.length(); g++) {
                     this.groups.add(groups.getInt(g));
                 }
             }
         } catch (Exception ex) {
-            Log.e("tag", ex.getMessage());
+            Log.e("User(String)", ex.getMessage());
         }
     }
 
@@ -69,8 +67,17 @@ public class User {
             user.put("apiKey", this.apiKey);
             user.put("keyValidTo", this.keyValidTo);
         } catch (Exception ex) {
-            Log.e("tag", ex.getMessage());
+            Log.e("User.toString()", ex.getMessage());
         }
         return user.toString();
+    }
+
+    public static User findUserByID(int userID, ArrayList<User> users) {
+        for (int i = 0; i < users.size(); i++) {
+            if (users.get(i).userID == userID) {
+                return users.get(i);
+            }
+        }
+        return null;
     }
 }

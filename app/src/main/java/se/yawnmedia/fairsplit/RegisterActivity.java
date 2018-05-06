@@ -19,10 +19,13 @@ import android.widget.EditText;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     private UserRegisterTask registerTask;
     private User registeredUser;
+    private List<Group> groups;
 
     // UI references.
     private EditText loginNameView;
@@ -43,6 +46,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         //DEBUG
         loginNameView.setText("testuser");
         passwordView.setText("testpassword");
+        passwordAgainView.setText("testpassword");
         //END DEBUG
 
         Button mRegisterButton = findViewById(R.id.register_button);
@@ -166,6 +170,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         private final String login;
         private final String password;
         private final String passwordAgain;
+        private String errorMessage;
 
         UserRegisterTask(String login, String password, String passwordAgain) {
             this.login = login;
@@ -188,12 +193,24 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 } else {
                     JSONObject responseUser = response.getJSONArray("data").getJSONObject(0);
                     registeredUser = new User(responseUser);
-                    return true;
+
+                    // Get groups info
+                    for (int i = 0; i < registeredUser.groups.size(); i++) {
+                        response = RESTHelper.GET("/group/" + registeredUser.groups.get(i), registeredUser.apiKey);
+                        if (response.has("errorCode") && (int) response.get("errorCode") != 0) {
+                            errorMessage = response.get("message").toString();
+                            return false;
+                        }
+                        JSONObject responseGroup = response.getJSONArray("data").getJSONObject(0);
+                        groups.add(new Group(responseGroup));
+                    }
                 }
             } catch (Exception ex) {
                 Snackbar.make(registerFormView, ex.getMessage(), Snackbar.LENGTH_LONG).show();
                 return false;
             }
+
+            return true;
         }
 
         @Override
@@ -204,6 +221,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             if (success) {
                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
                 intent.putExtra("user", registeredUser.toString());
+                intent.putExtra("groups", groups.toString());
                 startActivity(intent);
                 finish();
             } else {
