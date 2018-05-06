@@ -129,7 +129,7 @@ let api = {
                 r.requestUri = request.url;
                 r.data = res;
                 api.respond(request, response, r);
-              } else if (res instanceof Transaction) {
+              } else if (res instanceof Transaction.Transaction) {
                 let r = new Transaction.TransactionResponse();
                 r.requestUri = request.url;
                 r.data.push(res);
