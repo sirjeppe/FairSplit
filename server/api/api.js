@@ -85,7 +85,7 @@ let api = {
       console.log(request.headers);
       if (request.method !== 'GET') {
         console.log('======== BODY ========');
-        let printBody = new Object(body);
+        let printBody = Object.create(body);
         if ('password' in printBody) {
           delete printBody.password;
         }
