@@ -116,7 +116,12 @@ public final class RESTHelper {
                 // Also fetch all users for the group
                 for (int userID : groupToAdd.members) {
                     // Only fetch user if not already fetched
-
+                    if (!app.userInList(userID)) {
+                        response = RESTHelper.GET("/user/" + userID, user.apiKey);
+                        JSONObject responseAdditionalUser = response.getJSONArray("data").getJSONObject(0);
+                        User userToAdd = new User(responseAdditionalUser);
+                        app.addToAllUsers(userToAdd);
+                    }
                 }
             }
             app.setCurrentGroup(app.getAllGroups().get(0));

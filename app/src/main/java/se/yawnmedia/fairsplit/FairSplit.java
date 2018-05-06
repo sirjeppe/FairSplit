@@ -37,6 +37,17 @@ public class FairSplit extends Application {
         return allGroups;
     }
     public void addToAllGroups(Group group) {
-        allGroups.add(group);
+        if (!allGroups.contains(group)) {
+            allGroups.add(group);
+        }
+    }
+
+    public boolean userInList(int userID) {
+        for (User user : allUsers) {
+            if (user.userID == userID) {
+                return true;
+            }
+        }
+        return false;
     }
 }

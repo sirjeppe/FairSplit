@@ -129,9 +129,10 @@ class User {
         if (err) {
           callback(err);
         } else {
+          // Only return required fields
           that.userID = row.userID;
-          that.groupName = row.groupName;
-          that.members = (row.members) ? row.members.split(',').map((n) => { return parseInt(n); }) : [];
+          that.userName = row.userName;
+          that.salary = row.salary;
           callback(that);
         }
       }
