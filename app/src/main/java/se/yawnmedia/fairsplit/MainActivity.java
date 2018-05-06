@@ -257,7 +257,8 @@ public class MainActivity extends AppCompatActivity {
             try {
                 String apiKey = transactionObject[0].apiKey;
                 JSONObject transaction = transactionObject[0].transaction;
-                return new Transaction(RESTHelper.DoRequest("POST", RESTHelper.transactionEndpoint, transaction, apiKey));
+                JSONObject newTransaction = RESTHelper.POST(RESTHelper.transactionEndpoint, transaction, apiKey);
+                return new Transaction(newTransaction);
             } catch (Exception ex) {
                 this.exception = ex;
             }

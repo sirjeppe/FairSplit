@@ -75,8 +75,10 @@ let api = {
       console.log(request.method, request.url);
       console.log('======== HEADERS ========');
       console.log(request.headers);
-      console.log('======== BODY ========');
-      console.log(JSON.stringify(body));
+      if (request.method !== 'GET') {
+        console.log('======== BODY ========');
+        console.log(JSON.stringify(body));
+      }
       console.log('======== END REQUEST ========');
       // END DEBUG
 
