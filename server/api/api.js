@@ -231,6 +231,7 @@ let api = {
         callback(Error.ErrorCodes.MALFORMED_REQUEST);
       } else {
         let t = new Transaction.Transaction();
+        t.useDB(db);
         t.amount = body.amount;
         t.title = body.title;
         t.comment = body.comment;
