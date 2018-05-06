@@ -23,7 +23,7 @@
         android:layout_weight="1"
         android:ems="10"
         android:hint="@string/transaction_title"
-        android:inputType="textPersonName"/>
+        android:inputType="text"/>
 
     <EditText
         android:id="@+id/popupComment"
@@ -32,6 +32,6 @@
         android:layout_weight="1"
         android:ems="10"
         android:hint="@string/transaction_comment"
-        android:inputType="textPersonName"/>
+        android:inputType="text"/>
 
 </LinearLayout>
