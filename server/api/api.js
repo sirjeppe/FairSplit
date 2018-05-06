@@ -248,7 +248,7 @@ let api = {
       if (pathArray.indexOf('byUserID') > -1) {
         let userID = parseInt(pathArray[pathArray.length - 1]);
         if (userID > 0) {
-          Transaction.getAllByUserID(db, userID, (res) => {
+          Transaction.Transaction.getAllByUserID(db, userID, (res) => {
             callback(res);
           });
         } else {

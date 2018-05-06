@@ -64,7 +64,7 @@ public class User {
 
     private void getTransactionsForUser() {
         try {
-            JSONObject response = RESTHelper.GET("/transactions/byUserID/" + this.userID, this.apiKey);
+            JSONObject response = RESTHelper.GET("/transaction/byUserID/" + this.userID, this.apiKey);
             JSONArray t = response.getJSONArray("data");
             if (t.length() > 0) {
                 for (int i = 0; i < t.length(); i++) {
