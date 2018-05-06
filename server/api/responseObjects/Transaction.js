@@ -40,7 +40,7 @@ class Transaction {
     } else {
       let now = Math.floor(Date.now() / 1000);
       this.db.run(
-        'INSERT INTO transactions (amount, title, comment, groupID, userID, datetime) VALUES (?, ?, ?, ?, ?)',
+        'INSERT INTO transactions (amount, title, comment, groupID, userID, datetime) VALUES (?, ?, ?, ?, ?, ?)',
         [this.amount, this.title, this.comment, this.groupID, this.userID, now],
         function(err) {
           if (err) {
