@@ -28,10 +28,15 @@ class Group {
         if (err) {
           callback(err);
         } else {
-          that.groupID = row.groupID;
-          that.groupName = row.groupName;
-          that.members = (row.members) ? row.members.split(',').map((n) => { return parseInt(n); }) : [];
-          callback(that);
+          if (!row) {
+            console.error('DOH! row ===', row);
+            callback('ERROR');
+          } else {
+            that.groupID = row.groupID;
+            that.groupName = row.groupName;
+            that.members = (row.members) ? row.members.split(',').map((n) => { return parseInt(n); }) : [];
+            callback(that);
+          }
         }
       }
     )

@@ -197,11 +197,9 @@ let api = {
   // },
 
   group: function(db, request, response, body, callback) {
-    console.log('GROUP', request.method);
     if (request.method === 'GET') {
       let pathArray = request.url.split('/');
       let groupID = parseInt(pathArray[pathArray.length - 1]);
-      console.log('GET /group ByID', groupID);
       if (groupID > 0) {
         let g = new Group.Group();
         g.useDB(db);
