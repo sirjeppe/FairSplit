@@ -1,13 +1,11 @@
 package se.yawnmedia.fairsplit;
 
 import android.app.AlertDialog;
-import android.app.Application;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.content.res.TypedArrayUtils;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -22,11 +20,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -34,88 +28,6 @@ public class MainActivity extends AppCompatActivity {
 //    private static final int RC_OCR_CAPTURE = 9003;
     private TransactionAdapter transactionAdapter;
     private ListView transactionListView;
-
-    private void updateTransaction(Transaction newTransaction) {
-        if (!app.getCurrentUser().transactions.contains(newTransaction)) {
-            app.getCurrentUser().transactions.add(newTransaction);
-        }
-        if (transactionAdapter.getPosition(newTransaction) < 0) {
-            transactionAdapter.add(newTransaction);
-        }
-        transactionAdapter.notifyDataSetChanged();
-    }
-
-    private void switchUser(String user) {
-        for (int memberID : app.getCurrentGroup().members) {
-            User groupUser = User.findUserByID(memberID, app.getAllUsers());
-            if (groupUser != null && groupUser.userName.equals(user)) {
-                transactionAdapter.clear();
-                for (Transaction transaction : groupUser.transactions) {
-                    transactionAdapter.add(transaction);
-                }
-                transactionAdapter.notifyDataSetChanged();
-                return;
-            }
-        }
-    }
-
-    private void showTransactionAlert(final Transaction transaction) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-        if (transaction != null) {
-            alert.setTitle("Edit expense");
-        } else {
-            alert.setTitle("Add expense");
-        }
-        LayoutInflater inflater = MainActivity.this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.add_transaction_popup, null);
-        if (transaction != null) {
-            EditText popupAmount = dialogView.findViewById(R.id.popupAmount);
-            popupAmount.setText("" + transaction.amount);
-            popupAmount.setSelection(popupAmount.getText().length());
-            ((EditText) dialogView.findViewById(R.id.popupTitle)).setText(transaction.title);
-            ((EditText) dialogView.findViewById(R.id.popupComment)).setText(transaction.comment);
-        }
-        alert.setView(dialogView);
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                EditText amount = dialogView.findViewById(R.id.popupAmount);
-                EditText title = dialogView.findViewById(R.id.popupTitle);
-                EditText comment = dialogView.findViewById(R.id.popupComment);
-
-                Transaction toPost;
-                if (transaction == null) {
-                    Transaction newTransaction = new Transaction();
-                    newTransaction.title = title.getText().toString();
-                    newTransaction.amount = Double.parseDouble(amount.getText().toString());
-                    newTransaction.comment = comment.getText().toString();
-                    newTransaction.datetime = (int) (System.currentTimeMillis() / 1000);
-                    toPost = newTransaction;
-                } else {
-                    transaction.title = title.getText().toString();
-                    transaction.amount = Double.parseDouble(amount.getText().toString());
-                    transaction.comment = comment.getText().toString();
-                    transaction.datetime = (int) (System.currentTimeMillis() / 1000);
-                    toPost = transaction;
-                }
-
-                try {
-                    toPost.userID = app.getCurrentUser().userID;
-                    toPost.groupID = app.getCurrentGroup().groupID;
-                    new PostTransactionTask().execute(new PostTransactionObject(app.getCurrentUser().apiKey, toPost));
-                } catch (Exception ex) {
-                    Log.e("updateTransaction", ex.getMessage());
-                }
-              }
-        });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                //Put actions for CANCEL button here, or leave in blank
-            }
-        });
-        AlertDialog alertDialog = alert.create();
-        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        alertDialog.show();
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
                     alert.setTitle("Remove " + transaction.title + "?");
                     alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
-                            transactionAdapter.remove(transaction);
-                            transactionAdapter.notifyDataSetChanged();
+                            transaction.deleteMe = true;
+                            new PostTransactionTask().execute(transaction);
                         }
                     });
                     alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -254,17 +166,113 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
-    private class PostTransactionTask extends AsyncTask<PostTransactionObject, Void, Transaction> {
+    private void updateTransaction(Transaction newTransaction) {
+        if (!app.getCurrentUser().transactions.contains(newTransaction)) {
+            app.getCurrentUser().transactions.add(newTransaction);
+        }
+        if (transactionAdapter.getPosition(newTransaction) < 0) {
+            transactionAdapter.add(newTransaction);
+        }
+        if (newTransaction.deleteMe) {
+            transactionAdapter.remove(newTransaction);
+        }
+        transactionAdapter.notifyDataSetChanged();
+    }
+
+    private void switchUser(String user) {
+        for (int memberID : app.getCurrentGroup().members) {
+            User groupUser = User.findUserByID(memberID, app.getAllUsers());
+            if (groupUser != null && groupUser.userName.equals(user)) {
+                transactionAdapter.clear();
+                for (Transaction transaction : groupUser.transactions) {
+                    transactionAdapter.add(transaction);
+                }
+                transactionAdapter.notifyDataSetChanged();
+                return;
+            }
+        }
+    }
+
+    private void showTransactionAlert(final Transaction transaction) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+        if (transaction != null) {
+            alert.setTitle("Edit expense");
+        } else {
+            alert.setTitle("Add expense");
+        }
+        LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.add_transaction_popup, null);
+        if (transaction != null) {
+            EditText popupAmount = dialogView.findViewById(R.id.popupAmount);
+            popupAmount.setText("" + transaction.amount);
+            popupAmount.setSelection(popupAmount.getText().length());
+            ((EditText) dialogView.findViewById(R.id.popupTitle)).setText(transaction.title);
+            ((EditText) dialogView.findViewById(R.id.popupComment)).setText(transaction.comment);
+        }
+        alert.setView(dialogView);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                EditText amount = dialogView.findViewById(R.id.popupAmount);
+                EditText title = dialogView.findViewById(R.id.popupTitle);
+                EditText comment = dialogView.findViewById(R.id.popupComment);
+
+                Transaction toPost;
+                if (transaction == null) {
+                    Transaction newTransaction = new Transaction();
+                    newTransaction.title = title.getText().toString();
+                    newTransaction.amount = Double.parseDouble(amount.getText().toString());
+                    newTransaction.comment = comment.getText().toString();
+                    newTransaction.datetime = (int) (System.currentTimeMillis() / 1000);
+                    toPost = newTransaction;
+                } else {
+                    transaction.title = title.getText().toString();
+                    transaction.amount = Double.parseDouble(amount.getText().toString());
+                    transaction.comment = comment.getText().toString();
+                    toPost = transaction;
+                }
+
+                try {
+                    toPost.userID = app.getCurrentUser().userID;
+                    toPost.groupID = app.getCurrentGroup().groupID;
+                    new PostTransactionTask().execute(toPost);
+                } catch (Exception ex) {
+                    Log.e("updateTransaction", ex.getMessage());
+                }
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //Put actions for CANCEL button here, or leave in blank
+            }
+        });
+        AlertDialog alertDialog = alert.create();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        alertDialog.show();
+    }
+
+    private class PostTransactionTask extends AsyncTask<Transaction, Void, Transaction> {
         private Exception exception;
 
-        protected Transaction doInBackground(PostTransactionObject... transactionObject) {
+        protected Transaction doInBackground(Transaction... transaction) {
             try {
-                String apiKey = transactionObject[0].apiKey;
-                JSONObject transaction = transactionObject[0].transaction;
-                JSONObject transactionResponse = RESTHelper.POST(RESTHelper.transactionEndpoint, transaction, apiKey);
-                JSONObject newTransaction = transactionResponse.getJSONArray("data").getJSONObject(0);
-                Transaction returnTransaction = new Transaction(newTransaction);
-                return returnTransaction;
+                JSONObject transactionJSON = new JSONObject(transaction[0].toString());
+                if (transaction[0].transactionID == 0) {
+                    JSONObject transactionResponse = RESTHelper.POST(RESTHelper.transactionEndpoint, transactionJSON, app.getCurrentUser().apiKey);
+                    JSONObject newTransaction = transactionResponse.getJSONArray("data").getJSONObject(0);
+                    return new Transaction(newTransaction);
+                } else if (transaction[0].deleteMe == true) {
+                    JSONObject transactionResponse = RESTHelper.DELETE(RESTHelper.transactionEndpoint + "/" + transaction[0].transactionID, transactionJSON, app.getCurrentUser().apiKey);
+                    if (transactionResponse.getInt("errorCode") > 0) {
+                        return null;
+                    }
+                    return transaction[0];
+                } else {
+                    JSONObject transactionResponse = RESTHelper.PUT(RESTHelper.transactionEndpoint + "/" + transaction[0].transactionID, transactionJSON, app.getCurrentUser().apiKey);
+                    if (transactionResponse.getInt("errorCode") > 0) {
+                        return null;
+                    }
+                    return transaction[0];
+                }
             } catch (Exception ex) {
                 this.exception = ex;
             }
@@ -275,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
             if (transaction != null) {
                 updateTransaction(transaction);
             } else {
-                Snackbar.make(findViewById(R.id.logo), R.string.transaction_store_failed, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.logo), R.string.transaction_modification_failed, Snackbar.LENGTH_LONG).show();
             }
         }
     }

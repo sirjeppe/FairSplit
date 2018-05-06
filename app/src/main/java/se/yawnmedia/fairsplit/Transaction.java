@@ -12,6 +12,7 @@ public class Transaction {
     public String title;
     public String comment;
     public long datetime;
+    public boolean deleteMe = false;
 
     public Transaction() {}
 

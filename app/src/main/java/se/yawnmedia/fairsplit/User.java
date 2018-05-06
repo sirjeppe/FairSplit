@@ -32,7 +32,7 @@ public class User {
         } catch (Exception ex) {
             Log.e("User(JSONObject)", ex.getMessage());
         }
-        this.getTransactionsForUser();
+        this.fetchTransactionsForUser();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class User {
         return null;
     }
 
-    private void getTransactionsForUser() {
+    private void fetchTransactionsForUser() {
         try {
             JSONObject response = RESTHelper.GET("/transaction/byUserID/" + this.userID, this.apiKey);
             JSONArray t = response.getJSONArray("data");
@@ -71,7 +71,7 @@ public class User {
                 }
             }
         } catch (Exception ex) {
-            Log.e("User.getTransactionsForUser", ex.getMessage());
+            Log.e("User.fetchTransactionsForUser", ex.getMessage());
         }
     }
 }

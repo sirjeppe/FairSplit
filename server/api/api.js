@@ -83,7 +83,7 @@ let api = {
       console.log(request.method, request.url);
       console.log('======== HEADERS ========');
       console.log(request.headers);
-      if (request.method !== 'GET') {
+      if (request.method === 'POST' || request.method === 'PUT') {
         console.log('======== BODY ========');
         let printBody = Object.create(body);
         if ('password' in printBody) {

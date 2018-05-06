@@ -33,12 +33,12 @@ public final class RESTHelper {
         }
         urlConnection.setReadTimeout(10000);
         urlConnection.setConnectTimeout(15000);
-        if (urlConnection.getRequestMethod().equals("POST")) {
+        if (urlConnection.getRequestMethod().equals("POST") || urlConnection.getRequestMethod().equals("PUT")) {
             urlConnection.setDoOutput(true);
         }
         urlConnection.connect();
 
-        if (urlConnection.getRequestMethod().equals("POST") && data != null) {
+        if ((urlConnection.getRequestMethod().equals("POST") || urlConnection.getRequestMethod().equals("PUT")) && data != null) {
             OutputStream os = urlConnection.getOutputStream();
             os.write(data.toString().getBytes());
             os.flush();
@@ -73,6 +73,14 @@ public final class RESTHelper {
         return DoRequest("POST", uri, data, apiKey);
     }
 
+    public static JSONObject PUT(String uri, JSONObject data, String apiKey) throws IOException, JSONException {
+        return DoRequest("PUT", uri, data, apiKey);
+    }
+
+    public static JSONObject DELETE(String uri, JSONObject data, String apiKey) throws IOException, JSONException {
+        return DoRequest("DELETE", uri, data, apiKey);
+    }
+
     public static String loginUser(FairSplit app, String login, String password) throws IOException, JSONException {
         String errorMessage = null;
         JSONObject loginData = new JSONObject();
@@ -102,7 +110,14 @@ public final class RESTHelper {
                     return errorMessage;
                 }
                 JSONObject responseGroup = response.getJSONArray("data").getJSONObject(0);
-                app.addToAllGroups(new Group(responseGroup));
+                Group groupToAdd = new Group(responseGroup);
+                app.addToAllGroups(groupToAdd);
+
+                // Also fetch all users for the group
+                for (int userID : groupToAdd.members) {
+                    // Only fetch user if not already fetched
+
+                }
             }
             app.setCurrentGroup(app.getAllGroups().get(0));
         }
