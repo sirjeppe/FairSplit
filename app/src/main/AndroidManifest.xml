@@ -29,18 +29,6 @@
             android:name="se.yawnmedia.fairsplit.MainActivity"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
-        <activity
-            android:name="se.yawnmedia.fairsplit.CameraActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:label="@string/title_activity_camera"
-            android:parentActivityName="se.yawnmedia.fairsplit.MainActivity"
-            android:theme="@style/FullscreenTheme">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value="se.yawnmedia.fairsplit.MainActivity"/>
-        </activity>
-        <activity android:name="se.yawnmedia.fairsplit.OcrCaptureActivity"
-                  android:label="Read Text" />
     </application>
 
 </manifest>

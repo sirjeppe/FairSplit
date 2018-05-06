@@ -85,39 +85,6 @@ public class MainActivity extends AppCompatActivity {
                 showTransactionAlert(null);
             }
         });
-
-        /*FloatingActionButton fabCam = findViewById(R.id.add_transaction_by_camera);
-        fabCam.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // launch Ocr capture activity.
-                Intent intent = new Intent(MainActivity.this, OcrCaptureActivity.class);
-                intent.putExtra(OcrCaptureActivity.AutoFocus, true);
-                intent.putExtra(OcrCaptureActivity.UseFlash, false);
-
-                startActivityForResult(intent, RC_OCR_CAPTURE);
-            }
-        });*/
-
-        /*FloatingActionButton fabMenu = findViewById(R.id.add_transaction_menu);
-        fabMenu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View fabMenu) {
-                View byCam = findViewById(R.id.add_transaction_by_camera);
-                View byText = findViewById(R.id.add_transaction_by_text);
-                long animationDuration = 150;
-                if (byCam.getAlpha() == 1) {
-                    fabMenu.animate().rotationBy(-135).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(animationDuration).start();
-                    byCam.animate().alpha(0).translationYBy(175).setInterpolator(new DecelerateInterpolator()).setDuration(animationDuration).start();
-                    byText.animate().alpha(0).translationYBy(350).setInterpolator(new DecelerateInterpolator()).setDuration(animationDuration).start();
-                } else if (byCam.getAlpha() == 0) {
-                    fabMenu.animate().rotationBy(135).setInterpolator(new AccelerateDecelerateInterpolator()).setDuration(animationDuration).start();
-                    byCam.animate().alpha(1).translationYBy(-175).setInterpolator(new DecelerateInterpolator()).setDuration(animationDuration).start();
-                    byText.animate().alpha(1).translationYBy(-350).setInterpolator(new DecelerateInterpolator()).setDuration(animationDuration).start();
-                }
-
-            }
-        });*/
     }
 
     @Override

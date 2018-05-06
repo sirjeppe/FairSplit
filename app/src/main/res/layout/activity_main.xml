@@ -51,26 +51,4 @@
         app:backgroundTint="@color/logo_color"
         app:srcCompat="@drawable/ic_add_black_24dp"/>
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_transaction_by_camera"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:alpha="0"
-        android:visibility="gone"
-        app:backgroundTint="#ff5986d0"
-        app:srcCompat="@android:drawable/ic_menu_camera"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/add_transaction_menu"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:alpha="1"
-        android:visibility="gone"
-        app:backgroundTint="#ff106aff"
-        app:srcCompat="@drawable/ic_add_black_24dp"/>
-
 </android.support.design.widget.CoordinatorLayout>
