@@ -1,0 +1,38 @@
+<resources>
+    <string name="app_name">FairSplit</string>
+
+    <string name="prompt_login_name">Login name</string>
+    <string name="prompt_password">Password</string>
+    <string name="prompt_password_again">Password again</string>
+    <string name="action_sign_in">Sign in</string>
+    <string name="text_or">or</string>
+    <string name="action_register">Register new account</string>
+    <string name="action_menu">Menu</string>
+    <string name="register_text">Fill out the form below to create a new account. You can use any login name (it doesn\'t have to be your e-mail address).</string>
+    <string name="passwords_not_matching">Passwords do not match</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+
+    <string name="error_field_required">This field is required</string>
+    <string name="title_activity_camera">Snap the receipt</string>
+    <string name="permission_camera_rationale">Access to the camera is needed for detection</string>
+    <string name="no_camera_permission">This application cannot run because it does not have the camera permission.  The application will now exit.</string>
+    <string name="low_storage_error">Ocr dependencies cannot be downloaded due to low device storage</string>
+    <string name="ocr_header">Click &quot;Detect Text&quot; to detect text</string>
+    <string name="read_text">Detect Text</string>
+    <string name="auto_focus">Auto Focus</string>
+    <string name="use_flash">Use Flash</string>
+    <string name="ocr_success">Text read successfully</string>
+    <string name="ocr_failure">No text captured</string>
+    <string name="ocr_error">"Error reading text: %1$s"</string>
+    <string name="ok">OK</string>
+
+    <string name="transaction_title">Title</string>
+    <string name="transaction_amount">Amount</string>
+    <string name="transaction_comment">Comment (optional)</string>
+    <string name="transaction_store_failed">Failed to store the transaction</string>
+
+    <string name="select_group">Select group</string>
+    <string name="select_user">Select user</string>
+    <string name="settings">Settings</string>
+</resources>

@@ -1,0 +1,29 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_select_group"
+        android:icon="@drawable/ic_group_24dp"
+        android:title="@string/select_group"
+        app:showAsAction="always">
+        <menu>
+            <item android:title="Placeholder"></item>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_select_user"
+        android:icon="@drawable/ic_person_24dp"
+        android:title="@string/select_user"
+        app:showAsAction="always">
+        <menu>
+            <item android:title="Placeholder"></item>
+        </menu>
+    </item>
+
+    <item
+        android:id="@+id/action_settings"
+        android:icon="@drawable/ic_settings_24dp"
+        android:title="@string/settings"
+        app:showAsAction="always"/>
+</menu>
