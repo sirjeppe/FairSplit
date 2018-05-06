@@ -21,22 +21,17 @@ class Group {
 
   getByID(groupID, callback) {
     let that = this;
-    this.db.run(
-      'SELECT * FROM groups WHERE groupID=? LIMIT 1',
+    this.db.get(
+      'SELECT * FROM groups WHERE groupID=?',
       [groupID],
       function(err, row) {
         if (err) {
           callback(err);
         } else {
-          if (!row) {
-            console.error('DOH! row ===', row);
-            callback('ERROR');
-          } else {
-            that.groupID = row.groupID;
-            that.groupName = row.groupName;
-            that.members = (row.members) ? row.members.split(',').map((n) => { return parseInt(n); }) : [];
-            callback(that);
-          }
+          that.groupID = row.groupID;
+          that.groupName = row.groupName;
+          that.members = (row.members) ? row.members.split(',').map((n) => { return parseInt(n); }) : [];
+          callback(that);
         }
       }
     )
