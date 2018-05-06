@@ -77,6 +77,20 @@ class Transaction {
     );
   }
 
+  static deleteByID(db, transactionID, callback) {
+    db.run(
+      'DELETE FROM transactions WHERE transactionID=?',
+      [transactionID],
+      function(err) {
+        if (err) {
+          callback(err);
+        } else {
+          callback(true);
+        }
+      }
+    );
+  }
+
   static getAllByUserID(db, userID, callback) {
     db.all(
       'SELECT * FROM transactions WHERE userID=?',

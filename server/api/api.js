@@ -19,20 +19,25 @@ let Transaction = require(responses[4]);
 let api = {
   respond: function(request, response, data) {
     let code = 200;
-    if (data instanceof Error.ErrorResponse || typeof(data) === 'string') {
-      code = 400;
-    }
     let temp = data;
     if (typeof(data) === 'string') {
       data = new Error.ErrorResponse();
       data.requestUri = request.url;
       data.message = temp;
       data.errorCode = 100; // Uknown error
+      code = 400;
     } else if (typeof(data) === 'number') {
       data = new Error.ErrorResponse();
       data.requestUri = request.url;
       data.errorCode = temp;
       data.message = Error.ErrorMessages[temp];
+      code = 400;
+    } else if (typeof(data) === 'boolean') {
+      data = new BaseResponse();
+      data.requestUri = request.url;
+      data.errorCode = (data) ? 0 : Error.ErrorCodes.COMMAND_FAILED;
+      data.message = (data) ? 'Command successful' : Error.ErrorMessages[data.errorCode];
+      code = (data) ? code : 400;
     } else if (data instanceof BaseResponse) {
       // Strip out db property from data objects if there are any before sending
       // back the response
@@ -40,6 +45,9 @@ let api = {
         if ('db' in data.data[i]) {
           delete data.data[i].db;
         }
+      }
+      if (data instanceof Error.ErrorResponse) {
+        code = 400;
       }
     }
     response.writeHead(code, {'Content-Type': 'application/json'});
@@ -77,7 +85,14 @@ let api = {
       console.log(request.headers);
       if (request.method !== 'GET') {
         console.log('======== BODY ========');
-        console.log(JSON.stringify(body));
+        let printBody = new Object(body);
+        if ('password' in printBody) {
+          delete printBody.password;
+        }
+        if ('passwordAgain' in printBody) {
+          delete printBody.passwordAgain;
+        }
+        console.log(JSON.stringify(printBody));
       }
       console.log('======== END REQUEST ========');
       // END DEBUG
