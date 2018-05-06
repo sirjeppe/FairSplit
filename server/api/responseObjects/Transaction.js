@@ -16,6 +16,7 @@ class Transaction {
     this.comment = '';
     this.groupID = 0;
     this.userID = 0;
+    this.datetime = 0;
     this.db = null;
   }
 
@@ -69,6 +70,7 @@ class Transaction {
           that.comment = row.comment;
           that.groupID = row.groupID;
           that.userID = row.userID;
+          that.datetime = row.datetime;
           callback(that);
         }
       }
@@ -92,6 +94,7 @@ class Transaction {
             t.comment = row.comment;
             t.groupID = row.groupID;
             t.userID = row.userID;
+            t.datetime = row.datetime;
             transactions.push(t);
           });
           callback(transactions);
