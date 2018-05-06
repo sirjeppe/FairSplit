@@ -179,22 +179,21 @@ let api = {
     }
   },
 
-  // user: function(db, request, response, body, callback) {
-  //   let u = new User.User();
-  //   u.useDB(db);
-  //   if (u) {
-  //     let r = new User.UserResponse();
-  //     r.requestUri = request.url;
-  //     r.data.push(u);
-
-  //     response.writeHead(200, {'Content-Type': 'application/json'});
-  //     response.write(JSON.stringify(r));
-  //     response.end();
-  //     return true;
-  //   } else {
-  //     return 'User not found or password mismatch.';
-  //   }
-  // },
+  user: function(db, request, response, body, callback) {
+    if (request.method === 'GET') {
+      let pathArray = request.url.split('/');
+      let userID = parseInt(pathArray[pathArray.length - 1]);
+      if (userID > 0) {
+        let u = new User.User();
+        u.useDB(db);
+        u.getByID(userID, (res) => {
+          callback(res);
+        });
+      } else {
+        callback(Error.ErrorCodes.MALFORMED_REQUEST);
+      }
+    }
+  },
 
   group: function(db, request, response, body, callback) {
     if (request.method === 'GET') {

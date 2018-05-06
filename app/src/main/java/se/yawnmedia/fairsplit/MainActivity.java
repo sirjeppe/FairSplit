@@ -1,6 +1,7 @@
 package se.yawnmedia.fairsplit;
 
 import android.app.AlertDialog;
+import android.app.Application;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -29,18 +30,14 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
-    private User currentUser;
-    private Group currentGroup;
-    private ArrayList<User> allUsers = new ArrayList<>();
-    private ArrayList<Group> allGroups = new ArrayList<>();
-
+    private FairSplit app;
 //    private static final int RC_OCR_CAPTURE = 9003;
     private TransactionAdapter transactionAdapter;
     private ListView transactionListView;
 
     private void updateTransaction(Transaction newTransaction) {
-        if (!currentUser.transactions.contains(newTransaction)) {
-            currentUser.transactions.add(newTransaction);
+        if (!app.getCurrentUser().transactions.contains(newTransaction)) {
+            app.getCurrentUser().transactions.add(newTransaction);
         }
         if (transactionAdapter.getPosition(newTransaction) < 0) {
             transactionAdapter.add(newTransaction);
@@ -49,8 +46,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void switchUser(String user) {
-        for (int memberID : currentGroup.members) {
-            User groupUser = User.findUserByID(memberID, allUsers);
+        for (int memberID : app.getCurrentGroup().members) {
+            User groupUser = User.findUserByID(memberID, app.getAllUsers());
             if (groupUser != null && groupUser.userName.equals(user)) {
                 transactionAdapter.clear();
                 for (Transaction transaction : groupUser.transactions) {
@@ -102,9 +99,9 @@ public class MainActivity extends AppCompatActivity {
                 }
 
                 try {
-                    toPost.userID = currentUser.userID;
-                    toPost.groupID = currentGroup.groupID;
-                    new PostTransactionTask().execute(new PostTransactionObject(currentUser.apiKey, toPost));
+                    toPost.userID = app.getCurrentUser().userID;
+                    toPost.groupID = app.getCurrentGroup().groupID;
+                    new PostTransactionTask().execute(new PostTransactionObject(app.getCurrentUser().apiKey, toPost));
                 } catch (Exception ex) {
                     Log.e("updateTransaction", ex.getMessage());
                 }
@@ -123,29 +120,12 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        app = ((FairSplit) this.getApplication());
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
         toolbar.setTitleTextAppearance(this, R.style.Logo);
-
-        if (currentUser == null) {
-            currentUser = new User(getIntent().getExtras().getString("user"));
-        }
-
-        if (currentGroup == null) {
-            try {
-                JSONArray intentGroups = new JSONArray(getIntent().getExtras().getString("groups"));
-                if (intentGroups != null) {
-                    for (int g = 0; g < intentGroups.length(); g++) {
-                        JSONObject addGroup = intentGroups.getJSONObject(g);
-                        allGroups.add(new Group(addGroup));
-                    }
-                }
-            } catch (Exception ex) {
-                Log.e("currentGroup == null", ex.getMessage());
-            }
-        }
 
         if (transactionAdapter == null) {
             transactionAdapter = new TransactionAdapter(MainActivity.this, R.layout.transaction_item);
@@ -241,22 +221,21 @@ public class MainActivity extends AppCompatActivity {
                     return true;
 
                 case R.id.action_select_group:
-                    String[] groups = new String[] {
-                            "Test group 1", "Test group 2"
-                    };
                     subMenu = item.getSubMenu();
                     subMenu.clear();
-                    for (String user : groups) {
-                        subMenu.add(user);
+                    for (Group g : app.getAllGroups()) {
+                        subMenu.add(g.groupName);
                     }
                     return true;
 
                 case R.id.action_select_user:
                     subMenu = item.getSubMenu();
                     subMenu.clear();
-                    for (int m : currentGroup.members) {
-                        User u = User.findUserByID(m, allUsers);
-                        subMenu.add(u.userName);
+                    for (int m : app.getCurrentGroup().members) {
+                        User u = User.findUserByID(m, app.getAllUsers());
+                        if (u != null) {
+                            subMenu.add(u.userName);
+                        }
                     }
                     return true;
 

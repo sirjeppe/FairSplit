@@ -1,9 +1,7 @@
 package se.yawnmedia.fairsplit;
 
-import android.os.AsyncTask;
-import android.util.Log;
+import android.app.Application;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -75,19 +73,40 @@ public final class RESTHelper {
         return DoRequest("POST", uri, data, apiKey);
     }
 
-    /*public static User GetLoggedInUser(String apiKey) throws IOException, JSONException, Exception {
-        JSONObject response = DoRequest("GET", baseURL + "/login", null, apiKey);
+    public static String loginUser(FairSplit app, String login, String password) throws IOException, JSONException {
+        String errorMessage = null;
+        JSONObject loginData = new JSONObject();
+
+        loginData.put("userName", login);
+        loginData.put("password", password);
+
+        // Try to login user
+        JSONObject response = RESTHelper.POST("/login", loginData, null);
+
         if (response.has("errorCode") && (int) response.get("errorCode") != 0) {
-            throw new Exception(response.get("message").toString());
+            errorMessage = response.get("message").toString();
+            return errorMessage;
         }
+
         JSONObject responseUser = response.getJSONArray("data").getJSONObject(0);
         User user = new User(responseUser);
-        JSONArray groups = responseUser.getJSONArray("groups");
-        for (int i = 0; i < groups.length(); i++) {
-            Group group = new Group();
-            group.id = ((JSONObject) groups.get(i)).getInt("");
+        app.setCurrentUser(user);
+        app.addToAllUsers(user);
+
+        // Get groups info
+        if (user.groups.size() > 0) {
+            for (int i = 0; i < user.groups.size(); i++) {
+                response = RESTHelper.GET("/group/" + user.groups.get(i), user.apiKey);
+                if (response.has("errorCode") && (int) response.get("errorCode") != 0) {
+                    errorMessage = response.get("message").toString();
+                    return errorMessage;
+                }
+                JSONObject responseGroup = response.getJSONArray("data").getJSONObject(0);
+                app.addToAllGroups(new Group(responseGroup));
+            }
+            app.setCurrentGroup(app.getAllGroups().get(0));
         }
-        user.keyValidTo = responseUser.getLong("keyValidTo");
-        return user;
-    }*/
+
+        return errorMessage;
+    }
 }

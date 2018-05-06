@@ -24,13 +24,15 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
+    private FairSplit app;
     private UserLoginTask authTask;
     private User user;
-    private List<Group> groups;
+    private ArrayList<Group> groups = new ArrayList<>();
 
     // UI references.
     private EditText loginNameView;
@@ -41,6 +43,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        app = ((FairSplit) this.getApplication());
         setContentView(R.layout.activity_login);
 
         loginNameView = findViewById(R.id.login_name);
@@ -185,39 +188,15 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
         @Override
         protected Boolean doInBackground(Void... params) {
-            JSONObject response;
             try {
-                JSONObject loginData = new JSONObject();
-
-                loginData.put("userName", login);
-                loginData.put("password", password);
-
-                // Try to login user
-                response = RESTHelper.POST("/login", loginData, null);
-
-                if (response.has("errorCode") && (int) response.get("errorCode") != 0) {
-                    errorMessage = response.get("message").toString();
+                errorMessage = RESTHelper.loginUser(app, login, password);
+                if (errorMessage != null) {
                     return false;
-                }
-
-                JSONObject responseUser = response.getJSONArray("data").getJSONObject(0);
-                user = new User(responseUser);
-
-                // Get groups info
-                for (int i = 0; i < user.groups.size(); i++) {
-                    response = RESTHelper.GET("/group/" + user.groups.get(i), user.apiKey);
-                    if (response.has("errorCode") && (int) response.get("errorCode") != 0) {
-                        errorMessage = response.get("message").toString();
-                        return false;
-                    }
-                    JSONObject responseGroup = response.getJSONArray("data").getJSONObject(0);
-                    groups.add(new Group(responseGroup));
                 }
             } catch (Exception ex) {
                 Snackbar.make(loginFormView, ex.getMessage(), Snackbar.LENGTH_LONG).show();
                 return false;
             }
-
             return true;
         }
 
@@ -228,8 +207,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
 
             if (success) {
                 Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-                intent.putExtra("user", user.toString());
-                intent.putExtra("groups", groups.toString());
                 startActivity(intent);
                 finish();
             } else {

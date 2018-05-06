@@ -1,13 +1,8 @@
 package se.yawnmedia.fairsplit;
 
-import android.util.JsonReader;
 import android.util.Log;
 
 import org.json.JSONObject;
-
-/**
- * Created by Jeppe on 2018-03-26.
- */
 
 public class Transaction {
     public long transactionID;
@@ -30,7 +25,7 @@ public class Transaction {
             this.comment = transaction.getString("comment");
             this.datetime = transaction.getLong("datetime");
         } catch (Exception ex) {
-            Log.e("Transaction", ex.getMessage());
+            Log.e("Transaction(JSONObject)", ex.getMessage());
         }
     }
 

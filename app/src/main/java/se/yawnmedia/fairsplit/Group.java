@@ -34,7 +34,7 @@ public class Group {
         try {
             group.put("groupID", this.groupID);
             group.put("groupName", this.groupName);
-            group.put("members", this.members);
+            group.put("members", new JSONArray(this.members));
         } catch (Exception ex) {
             Log.e("Group.toString()", ex.getMessage());
         }

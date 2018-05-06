@@ -19,13 +19,15 @@ import android.widget.EditText;
 
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
+    private FairSplit app;
     private UserRegisterTask registerTask;
     private User registeredUser;
-    private List<Group> groups;
+    private ArrayList<Group> groups = new ArrayList<>();
 
     // UI references.
     private EditText loginNameView;
@@ -37,6 +39,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        app = ((FairSplit) this.getApplication());
         setContentView(R.layout.activity_register);
 
         loginNameView = findViewById(R.id.login_name);
@@ -194,15 +197,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                     JSONObject responseUser = response.getJSONArray("data").getJSONObject(0);
                     registeredUser = new User(responseUser);
 
-                    // Get groups info
-                    for (int i = 0; i < registeredUser.groups.size(); i++) {
-                        response = RESTHelper.GET("/group/" + registeredUser.groups.get(i), registeredUser.apiKey);
-                        if (response.has("errorCode") && (int) response.get("errorCode") != 0) {
-                            errorMessage = response.get("message").toString();
-                            return false;
-                        }
-                        JSONObject responseGroup = response.getJSONArray("data").getJSONObject(0);
-                        groups.add(new Group(responseGroup));
+                    errorMessage = RESTHelper.loginUser(app, login, password);
+                    if (errorMessage != null) {
+                        return false;
                     }
                 }
             } catch (Exception ex) {
@@ -220,8 +217,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
             if (success) {
                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
-                intent.putExtra("user", registeredUser.toString());
-                intent.putExtra("groups", groups.toString());
                 startActivity(intent);
                 finish();
             } else {
