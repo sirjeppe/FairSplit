@@ -34,7 +34,7 @@ class Group {
           callback(that);
         }
       }
-    )
+    );
   }
 }
 

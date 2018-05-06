@@ -123,7 +123,21 @@ let api = {
               }
             });
           } else if (handler === 'transaction') {
-            api.transaction(db, request, response, body);
+            api.transaction(db, request, response, body, (res) => {
+              if (res instanceof Array) {
+                let r = new Transaction.TransactionResponse();
+                r.requestUri = request.url;
+                r.data = res;
+                api.respond(request, response, r);
+              } else if (res instanceof Transaction) {
+                let r = new Transaction.TransactionResponse();
+                r.requestUri = request.url;
+                r.data.push(res);
+                api.respond(request, response, r);
+              } else {
+                api.respond(request, response, res);
+              }
+            });
           } else {
             api.respond(request, response, 'No handler found for request: ' + request.url);
           }
@@ -209,25 +223,37 @@ let api = {
         callback(Error.ErrorCodes.MALFORMED_REQUEST);
       }
     }
-  }//,
+  },
 
-  // transaction: function(db, request, response, body) {
-  //   if (request.method === 'POST') {
-  //     let t = new Transaction.Transaction(body.amount, body.comment);
-  //     t.useDB(db);
-  //     if (t) {
-  //       let r = new Transaction.TransactionResponse();
-  //       r.requestUri = request.url;
-
-  //       response.writeHead(200, {'Content-Type': 'application/json'});
-  //       response.write(JSON.stringify(r));
-  //       response.end();
-  //       return true;
-  //     } else {
-  //       return 'User not found or password mismatch.';
-  //     }
-  //   }
-  // }
+  transaction: function(db, request, response, body, callback) {
+    if (request.method === 'POST') {
+      if (typeof(body.amount) === 'undefined' || typeof(body.comment) === 'undefined' || typeof(body.groupID) === 'undefined' || typeof(body.userID) === 'undefined') {
+        callback(Error.ErrorCodes.MALFORMED_REQUEST);
+      } else {
+        let t = new Transaction.Transaction();
+        t.amount = body.amount;
+        t.title = body.title;
+        t.comment = body.comment;
+        t.groupID = body.groupID;
+        t.userID = body.userID;
+        t.save((res) => {
+          callback(res);
+        });
+      }
+    } else if (request.method === 'GET') {
+      let pathArray = request.url.split('/');
+      if (pathArray.indexOf('byUserID') > -1) {
+        let userID = parseInt(pathArray[pathArray.length - 1]);
+        if (userID > 0) {
+          Transaction.getAllByUserID(db, userID, (res) => {
+            callback(res);
+          });
+        } else {
+          callback(Error.ErrorCodes.MALFORMED_REQUEST);
+        }
+      }
+    }
+  }
 };
 
 module.exports = {

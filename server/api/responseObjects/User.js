@@ -114,8 +114,25 @@ class User {
                 );
               }
             }
-          )
+          );
+        }
+      }
+    );
+  }
 
+  getByID(userID, callback) {
+    let that = this;
+    this.db.get(
+      'SELECT * FROM users WHERE userID=?',
+      [userID],
+      function(err, row) {
+        if (err) {
+          callback(err);
+        } else {
+          that.userID = row.userID;
+          that.groupName = row.groupName;
+          that.members = (row.members) ? row.members.split(',').map((n) => { return parseInt(n); }) : [];
+          callback(that);
         }
       }
     );

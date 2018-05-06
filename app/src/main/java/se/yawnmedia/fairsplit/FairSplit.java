@@ -28,7 +28,9 @@ public class FairSplit extends Application {
         return allUsers;
     }
     public void addToAllUsers(User user) {
-        allUsers.add(user);
+        if (!allUsers.contains(user)) {
+            allUsers.add(user);
+        }
     }
 
     public ArrayList<Group> getAllGroups() {

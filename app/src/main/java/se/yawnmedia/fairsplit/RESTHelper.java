@@ -93,7 +93,7 @@ public final class RESTHelper {
         app.setCurrentUser(user);
         app.addToAllUsers(user);
 
-        // Get groups info
+        // Gather all info
         if (user.groups.size() > 0) {
             for (int i = 0; i < user.groups.size(); i++) {
                 response = RESTHelper.GET("/group/" + user.groups.get(i), user.apiKey);

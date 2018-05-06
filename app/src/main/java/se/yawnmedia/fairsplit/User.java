@@ -33,26 +33,7 @@ public class User {
         } catch (Exception ex) {
             Log.e("User(JSONObject)", ex.getMessage());
         }
-    }
-
-    public User(String user) {
-        try {
-            JSONObject userObject = new JSONObject(user);
-            this.userID = userObject.getInt("userID");
-            this.userName = userObject.getString("userName");
-            this.salary = userObject.getInt("salary");
-            this.apiKey = userObject.getString("apiKey");
-            this.keyValidTo = userObject.getLong("keyValidTo");
-            this.groups = new ArrayList<>();
-            JSONArray groups = userObject.getJSONArray("groups");
-            if (groups.length() > 0) {
-                for (int g = 0; g < groups.length(); g++) {
-                    this.groups.add(groups.getInt(g));
-                }
-            }
-        } catch (Exception ex) {
-            Log.e("User(String)", ex.getMessage());
-        }
+        this.getTransactionsForUser();
     }
 
     @Override
@@ -79,5 +60,19 @@ public class User {
             }
         }
         return null;
+    }
+
+    private void getTransactionsForUser() {
+        try {
+            JSONObject response = RESTHelper.GET("/transactions/byUserID/" + this.userID, this.apiKey);
+            JSONArray t = response.getJSONArray("data");
+            if (t.length() > 0) {
+                for (int i = 0; i < t.length(); i++) {
+                    this.transactions.add(new Transaction(t.getJSONObject(i)));
+                }
+            }
+        } catch (Exception ex) {
+            Log.e("User.getTransactionsForUser", ex.getMessage());
+        }
     }
 }
