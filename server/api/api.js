@@ -47,14 +47,15 @@ let api = {
     response.end();
 
     // DEBUG
-    console.log("======== START RESPONSE ========");
+    console.log();
+    console.log('======== START RESPONSE ========');
     console.log(JSON.stringify(data));
-    console.log("======== END RESPONSE BODY ========");
+    console.log('======== END RESPONSE BODY ========');
     // END DEBUG
   },
 
   handle: function(db, request, response) {
-    let handler = url.parse(request.url.substring('/api/'.length)).pathname;
+    let handler = url.parse(request.url.substring('/api/'.length)).pathname.split('/')[0];
 
     let body = {};
     let bodyArray = [];
@@ -69,13 +70,14 @@ let api = {
       }
 
       // DEBUG
-      console.log("======== START REQUEST ========");
+      console.log();
+      console.log('======== START REQUEST ========');
       console.log(request.method, request.url);
-      console.log("======== HEADERS ========");
+      console.log('======== HEADERS ========');
       console.log(request.headers);
-      console.log("======== BODY ========");
+      console.log('======== BODY ========');
       console.log(JSON.stringify(body));
-      console.log("======== END REQUEST ========");
+      console.log('======== END REQUEST ========');
       // END DEBUG
 
       // Validate API key
@@ -195,6 +197,7 @@ let api = {
   // },
 
   group: function(db, request, response, body, callback) {
+    console.log('GROUP', request.method);
     if (request.method === 'GET') {
       let pathArray = request.url.split('/');
       let groupID = parseInt(pathArray[pathArray.length - 1]);

@@ -38,7 +38,7 @@ class User {
 
   login(userName, password, callback) {
     let that = this;
-    this.db.get('SELECT * FROM users WHERE userName=?', [userName], (err, row) => {
+    this.db.get('SELECT * FROM users WHERE userName=?', [userName], function(err, row) {
       if (err) {
         callback(err);
       } else if (!row) {

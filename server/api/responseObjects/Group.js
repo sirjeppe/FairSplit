@@ -24,7 +24,7 @@ class Group {
     this.db.run(
       'SELECT * FROM groups WHERE groupID=? LIMIT 1',
       [groupID],
-      function(err) {
+      function(err, row) {
         if (err) {
           callback(err);
         } else {

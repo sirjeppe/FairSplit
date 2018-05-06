@@ -35,10 +35,12 @@ public final class RESTHelper {
         }
         urlConnection.setReadTimeout(10000);
         urlConnection.setConnectTimeout(15000);
-        urlConnection.setDoOutput(true);
+        if (urlConnection.getRequestMethod().equals("POST")) {
+            urlConnection.setDoOutput(true);
+        }
         urlConnection.connect();
 
-        if (method.equals("POST") && data != null) {
+        if (urlConnection.getRequestMethod().equals("POST") && data != null) {
             OutputStream os = urlConnection.getOutputStream();
             os.write(data.toString().getBytes());
             os.flush();
