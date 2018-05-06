@@ -10,13 +10,12 @@ import java.util.ArrayList;
 public class Group {
     public int groupID;
     public String groupName;
-    public ArrayList<Integer> members;
+    public ArrayList<Integer> members = new ArrayList<>();
 
     public Group(JSONObject group) {
         try {
             this.groupID = group.getInt("groupID");
             this.groupName = group.getString("groupName");
-            this.members = new ArrayList<>();
             JSONArray members = group.getJSONArray("members");
             if (members.length() > 0) {
                 for (int m = 0; m < members.length(); m++) {

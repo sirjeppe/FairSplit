@@ -160,6 +160,10 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             });
+            for (Transaction transaction : app.getCurrentUser().transactions) {
+                transactionAdapter.add(transaction);
+            }
+            transactionAdapter.notifyDataSetChanged();
         }
 
         FloatingActionButton fabText = findViewById(R.id.add_transaction_by_text);
@@ -257,8 +261,10 @@ public class MainActivity extends AppCompatActivity {
             try {
                 String apiKey = transactionObject[0].apiKey;
                 JSONObject transaction = transactionObject[0].transaction;
-                JSONObject newTransaction = RESTHelper.POST(RESTHelper.transactionEndpoint, transaction, apiKey);
-                return new Transaction(newTransaction);
+                JSONObject transactionResponse = RESTHelper.POST(RESTHelper.transactionEndpoint, transaction, apiKey);
+                JSONObject newTransaction = transactionResponse.getJSONArray("data").getJSONObject(0);
+                Transaction returnTransaction = new Transaction(newTransaction);
+                return returnTransaction;
             } catch (Exception ex) {
                 this.exception = ex;
             }

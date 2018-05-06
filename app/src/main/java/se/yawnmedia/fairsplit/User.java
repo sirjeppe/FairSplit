@@ -11,8 +11,8 @@ public class User {
     public int userID;
     public String userName;
     public int salary;
-    public ArrayList<Integer> groups;
-    public ArrayList<Transaction> transactions;
+    public ArrayList<Integer> groups = new ArrayList<>();
+    public ArrayList<Transaction> transactions = new ArrayList<>();
     public String apiKey;
     public long keyValidTo;
 
@@ -23,7 +23,6 @@ public class User {
             this.salary = user.getInt("salary");
             this.apiKey = user.getString("apiKey");
             this.keyValidTo = user.getLong("keyValidTo");
-            this.groups = new ArrayList<>();
             JSONArray groups = user.getJSONArray("groups");
             if (groups.length() > 0) {
                 for (int g = 0; g < groups.length(); g++) {
