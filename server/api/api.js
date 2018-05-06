@@ -85,7 +85,7 @@ let api = {
       console.log(request.headers);
       if (request.method === 'POST' || request.method === 'PUT') {
         console.log('======== BODY ========');
-        let printBody = Object.create(body);
+        let printBody = Object.assign({}, body);
         if ('password' in printBody) {
           delete printBody.password;
         }
