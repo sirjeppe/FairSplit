@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class FairSplit extends Application {
     private User currentUser;
+    private User selectedUser;
     private Group currentGroup;
     private ArrayList<User> allUsers = new ArrayList<>();
     private ArrayList<Group> allGroups = new ArrayList<>();
@@ -15,6 +16,13 @@ public class FairSplit extends Application {
     }
     public void setCurrentUser(User user) {
         currentUser = user;
+    }
+
+    public User getSelectedUser() {
+        return selectedUser;
+    }
+    public void setSelectedUser(User user) {
+        selectedUser = user;
     }
 
     public Group getCurrentGroup() {
@@ -27,6 +35,14 @@ public class FairSplit extends Application {
     public ArrayList<User> getAllUsers() {
         return allUsers;
     }
+    public User getUserByID(int userID) {
+        for (User user : allUsers) {
+            if (user.userID == userID) {
+                return user;
+            }
+        }
+        return null;
+    }
     public void addToAllUsers(User user) {
         if (!allUsers.contains(user)) {
             allUsers.add(user);
@@ -35,6 +51,14 @@ public class FairSplit extends Application {
 
     public ArrayList<Group> getAllGroups() {
         return allGroups;
+    }
+    public Group getGroupByID(int groupID) {
+        for (Group group : allGroups) {
+            if (group.groupID == groupID) {
+                return group;
+            }
+        }
+        return null;
     }
     public void addToAllGroups(Group group) {
         if (!allGroups.contains(group)) {

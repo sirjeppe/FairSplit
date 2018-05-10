@@ -6,9 +6,9 @@
         android:icon="@drawable/ic_group_24dp"
         android:title="@string/select_group"
         app:showAsAction="always">
-        <menu>
-            <item android:title="Placeholder"></item>
-        </menu>
+        <!--<menu>-->
+            <!--<item android:title="Placeholder"></item>-->
+        <!--</menu>-->
     </item>
 
     <item
@@ -16,9 +16,9 @@
         android:icon="@drawable/ic_person_24dp"
         android:title="@string/select_user"
         app:showAsAction="always">
-        <menu>
-            <item android:title="Placeholder"></item>
-        </menu>
+        <!--<menu>-->
+            <!--<item android:title="Placeholder"></item>-->
+        <!--</menu>-->
     </item>
 
     <item

@@ -12,13 +12,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.ViewFlipper;
 
 import org.json.JSONObject;
 
@@ -27,18 +28,33 @@ public class MainActivity extends AppCompatActivity {
     private FairSplit app;
 //    private static final int RC_OCR_CAPTURE = 9003;
     private TransactionAdapter transactionAdapter;
+    private GroupsAdapter groupsAdapter;
+    private UsersAdapter usersAdapter;
     private ListView transactionListView;
+    private ListView groupsListView;
+    private ListView usersListView;
+    private FloatingActionButton actionButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        app = ((FairSplit) this.getApplication());
+
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setTitle(R.string.app_name);
         toolbar.setTitleTextAppearance(this, R.style.Logo);
 
+        // Find some stuff
+        actionButton = findViewById(R.id.add_action_button);
+        app = ((FairSplit) this.getApplication());
+
+        // Default to show logged in user after logging in
+        if (app.getSelectedUser() == null) {
+            app.setSelectedUser(app.getCurrentUser());
+        }
+
+        // Transactions part
         if (transactionAdapter == null) {
             transactionAdapter = new TransactionAdapter(MainActivity.this, R.layout.transaction_item);
             transactionListView = findViewById(R.id.transaction_list_view);
@@ -72,13 +88,80 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 }
             });
-            for (Transaction transaction : app.getCurrentUser().transactions) {
+            for (Transaction transaction : app.getSelectedUser().transactions) {
                 transactionAdapter.add(transaction);
             }
             transactionAdapter.notifyDataSetChanged();
         }
+        // End transactions part
 
-        FloatingActionButton fabText = findViewById(R.id.add_transaction_by_text);
+        // Groups part
+        if (groupsAdapter == null) {
+            groupsAdapter = new GroupsAdapter(MainActivity.this, R.layout.group_item);
+            groupsListView = findViewById(R.id.groups_list_view);
+            groupsListView.setAdapter(groupsAdapter);
+            groupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    RadioButton groupRadioButton = view.findViewById(R.id.groupRadioButton);
+                    Group group = (Group) groupRadioButton.getTag();
+                    app.setCurrentGroup(group);
+                    ViewFlipper vf = findViewById(R.id.vf);
+                    vf.setDisplayedChild(0);
+                }
+            });
+//            groupsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//                @Override
+//                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                    TextView groupName = view.findViewById(R.id.groupName);
+//                    final Group group = (Group) groupName.getTag();
+//
+//                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+//                    alert.setTitle("Remove " + group.groupName + "?");
+//                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int whichButton) {
+//                            group.deleteMe = true;
+//                            new PostGroupTask().execute(group);
+//                        }
+//                    });
+//                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                        public void onClick(DialogInterface dialog, int whichButton) {}
+//                    });
+//                    alert.show();
+//                    return true;
+//                }
+//            });
+            for (int groupID : app.getCurrentUser().groups) {
+                groupsAdapter.add(app.getGroupByID(groupID));
+            }
+            groupsAdapter.notifyDataSetChanged();
+        }
+        // End groups part
+
+        // Users part
+        if (usersAdapter == null) {
+            usersAdapter = new UsersAdapter(MainActivity.this, R.layout.user_item);
+            usersListView = findViewById(R.id.users_list_view);
+            usersListView.setAdapter(usersAdapter);
+            usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                @Override
+                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    RadioButton userRadioButton = view.findViewById(R.id.userRadioButton);
+                    User user = (User) userRadioButton.getTag();
+                    app.setSelectedUser(user);
+                    ViewFlipper vf = findViewById(R.id.vf);
+                    vf.setDisplayedChild(0);
+                    actionButton.setVisibility(View.VISIBLE);
+                }
+            });
+            for (int userID : app.getCurrentGroup().members) {
+                usersAdapter.add(app.getUserByID(userID));
+            }
+            usersAdapter.notifyDataSetChanged();
+        }
+        // End users part
+
+        FloatingActionButton fabText = findViewById(R.id.add_action_button);
         fabText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View view) {
@@ -96,39 +179,24 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getSubMenu() != null || item.getItemId() == R.id.action_settings) {
-            SubMenu subMenu;
-            switch (item.getItemId()) {
-                case R.id.action_settings:
-                    Snackbar.make(findViewById(R.id.logo), R.string.settings, Snackbar.LENGTH_LONG).show();
-                    return true;
+        ViewFlipper vf = findViewById(R.id.vf);
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Snackbar.make(findViewById(R.id.logo), R.string.settings, Snackbar.LENGTH_LONG).show();
+                break;
 
-                case R.id.action_select_group:
-                    subMenu = item.getSubMenu();
-                    subMenu.clear();
-                    for (Group g : app.getAllGroups()) {
-                        subMenu.add(g.groupName);
-                    }
-                    return true;
+            case R.id.action_select_group:
+                vf.setDisplayedChild(1);
+                break;
 
-                case R.id.action_select_user:
-                    subMenu = item.getSubMenu();
-                    subMenu.clear();
-                    for (int m : app.getCurrentGroup().members) {
-                        User u = User.findUserByID(m, app.getAllUsers());
-                        if (u != null) {
-                            subMenu.add(u.userName);
-                        }
-                    }
-                    return true;
+            case R.id.action_select_user:
+                actionButton.setVisibility(View.GONE);
+                vf.setDisplayedChild(2);
+                break;
 
-                default:
-                    return super.onOptionsItemSelected(item);
+            default:
+                return super.onOptionsItemSelected(item);
 
-            }
-        } else {
-            String user = item.getTitle().toString();
-            switchUser(user);
         }
         return true;
     }
@@ -218,8 +286,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private class PostTransactionTask extends AsyncTask<Transaction, Void, Transaction> {
-        private Exception exception;
-
         protected Transaction doInBackground(Transaction... transaction) {
             try {
                 JSONObject transactionJSON = new JSONObject(transaction[0].toString());
@@ -241,7 +307,7 @@ public class MainActivity extends AppCompatActivity {
                     return transaction[0];
                 }
             } catch (Exception ex) {
-                this.exception = ex;
+                Log.e("PostTransactionTask", ex.getMessage());
             }
             return null;
         }

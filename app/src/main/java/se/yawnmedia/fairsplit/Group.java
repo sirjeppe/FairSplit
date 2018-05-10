@@ -11,6 +11,7 @@ public class Group {
     public int groupID;
     public String groupName;
     public ArrayList<Integer> members = new ArrayList<>();
+    public boolean deleteMe = false;
 
     public Group(JSONObject group) {
         try {
