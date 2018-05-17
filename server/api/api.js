@@ -172,8 +172,8 @@ let api = {
     db.get(
       'SELECT * FROM users WHERE apiKey = ? AND keyValidTo >= ?',
       [request.headers['fairsplit-apikey'], now],
-      (err, row) => {
-        if (err) {
+      function(err, row) {
+        if (err || row === undefined) {
           callback('Failed to validate the API key!');
         } else {
           callback(true);
