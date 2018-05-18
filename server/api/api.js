@@ -184,10 +184,7 @@ let api = {
             [newValidTime, row.userID],
             function(err) {
               if (err) {
-                console.error('Failed to set new valid time', err);
-              } else {
-                console.log('Key now valid to', newValidTime, 'for userID', row.userID);
-
+                console.error('Failed to set new valid time', err, 'for userID', row.userID);
               }
             }
           );
