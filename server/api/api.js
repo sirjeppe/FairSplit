@@ -176,7 +176,21 @@ let api = {
         if (err || row === undefined) {
           callback('Failed to validate the API key!');
         } else {
-          callback(true);
+          // For each successful request, prolong validity by 2 weeks
+          let twoWeeks = 60 * 60 * 24 * 14;
+          let newValidTime = parseInt(now + twoWeeks);
+          db.run(
+            'UPDATE users SET keyValidTo = ? WHERE id = ?',
+            [newValidTime, row.userID],
+            function(err) {
+              if (err) {
+                callback(err);
+              } else {
+                console.log('Key now valid to', newValidTime, 'for userID', row.userID);
+                callback(true);
+              }
+            }
+          );
         }
       }
     );
