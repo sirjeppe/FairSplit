@@ -180,7 +180,7 @@ let api = {
           let twoWeeks = 60 * 60 * 24 * 14;
           let newValidTime = parseInt(now + twoWeeks);
           db.run(
-            'UPDATE users SET keyValidTo = ? WHERE id = ?',
+            'UPDATE users SET keyValidTo = ? WHERE userID = ?',
             [newValidTime, row.userID],
             function(err) {
               if (err) {
