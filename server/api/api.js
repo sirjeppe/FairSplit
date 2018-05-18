@@ -127,7 +127,16 @@ let api = {
           }
         } else {
           if (handler === 'user') {
-            api.user(db, request, response, body);
+            api.user(db, request, response, body, (res) => {
+              if (res instanceof User.User) {
+                let r = new User.UserResponse();
+                r.requestUri = request.url;
+                r.data.push(res);
+                api.respond(request, response, r);
+              } else {
+                api.respond(request, response, res);
+              }
+            });
           } else if (handler === 'group') {
             api.group(db, request, response, body, (res) => {
               if (res instanceof Group.Group) {
