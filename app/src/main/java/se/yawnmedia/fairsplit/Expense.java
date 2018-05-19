@@ -4,7 +4,7 @@ import android.util.Log;
 
 import org.json.JSONObject;
 
-public class Transaction {
+public class Expense {
     public long transactionID;
     public long groupID;
     public long userID;
@@ -14,9 +14,9 @@ public class Transaction {
     public long datetime;
     public boolean deleteMe = false;
 
-    public Transaction() {}
+    public Expense() {}
 
-    public Transaction(JSONObject transaction) {
+    public Expense(JSONObject transaction) {
         try {
             this.transactionID = transaction.getLong("transactionID");
             this.groupID = transaction.getLong("groupID");
@@ -26,7 +26,7 @@ public class Transaction {
             this.comment = transaction.getString("comment");
             this.datetime = transaction.getLong("datetime");
         } catch (Exception ex) {
-            Log.e("Transaction(JSONObject)", ex.getMessage());
+            Log.e("Expense(JSONObject)", ex.getMessage());
         }
     }
 
@@ -42,7 +42,7 @@ public class Transaction {
             user.put("comment", this.comment);
             user.put("datetime", this.datetime);
         } catch (Exception ex) {
-            Log.e("Transaction.toString()", ex.getMessage());
+            Log.e("Expense.toString()", ex.getMessage());
         }
         return user.toString();
     }

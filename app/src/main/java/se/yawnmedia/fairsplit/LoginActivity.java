@@ -14,6 +14,7 @@ import android.os.AsyncTask;
 
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,6 +46,27 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         super.onCreate(savedInstanceState);
         app = ((FairSplit) this.getApplication());
         app.setupAppPrefs(this);
+
+        // Check if we can login already before loading first screen
+        // Default to show logged in user after logging in
+        if (app.getSelectedUser() == null) {
+            if (app.getCurrentUser() == null) {
+                try {
+                    new TryLoginTask(app, this).execute().get();
+                    if (app.getSelectedUser() != null) {
+                        Intent intent = new Intent(this, MainActivity.class);
+                        startActivity(intent);
+                    }
+                } catch (Exception ex) {
+                    Log.e("TryLoginTask", ex.getMessage());
+                }
+            } else {
+                app.setSelectedUser(app.getCurrentUser());
+                Intent intent = new Intent(this, MainActivity.class);
+                startActivity(intent);
+            }
+        }
+
         setContentView(R.layout.activity_login);
 
         loginNameView = findViewById(R.id.login_name);

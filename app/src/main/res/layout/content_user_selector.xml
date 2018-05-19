@@ -6,8 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="se.yawnmedia.fairsplit.MainActivity"
-    tools:showIn="@layout/activity_main">
+    tools:context="se.yawnmedia.fairsplit.MainActivity">
 
     <ListView
         android:id="@+id/users_list_view"

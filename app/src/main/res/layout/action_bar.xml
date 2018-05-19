@@ -40,8 +40,9 @@
             android:id="@+id/expenses_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Expenses"
-            android:textSize="10dp"/>
+            android:text="@string/tabname_expenses"
+            android:textSize="10dp"
+            android:alpha="0"/>
 
     </LinearLayout>
 
@@ -66,7 +67,7 @@
             android:id="@+id/groups_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Groups"
+            android:text="@string/tabname_groups"
             android:textSize="10dp"
             android:alpha="0"/>
 
@@ -93,7 +94,7 @@
             android:id="@+id/users_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Users"
+            android:text="@string/tabname_users"
             android:textSize="10dp"
             android:alpha="0"/>
 
@@ -122,7 +123,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:alpha="0"
-            android:text="Settings"
+            android:text="@string/tabname_settings"
             android:textSize="10dp"/>
 
     </LinearLayout>

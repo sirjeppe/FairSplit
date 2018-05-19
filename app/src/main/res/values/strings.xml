@@ -4,6 +4,7 @@
     <string name="prompt_login_name">Login name</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_password_again">Password again</string>
+    <string name="prompt_salary">Salary</string>
     <string name="action_sign_in">Sign in</string>
     <string name="text_or">or</string>
     <string name="action_register">Register new account</string>
@@ -27,7 +28,7 @@
     <string name="ocr_error">"Error reading text: %1$s"</string>
     <string name="ok">OK</string>
 
-    <string name="tabname_transactions">Transactions</string>
+    <string name="tabname_expenses">Expenses</string>
     <string name="tabname_groups">Groups</string>
     <string name="tabname_users">Users</string>
     <string name="tabname_settings">Settings</string>
@@ -35,7 +36,7 @@
     <string name="transaction_title">Title</string>
     <string name="transaction_amount">Amount</string>
     <string name="transaction_comment">Comment (optional)</string>
-    <string name="transaction_modification_failed">Failed to store/edit/delete the transaction</string>
+    <string name="transaction_modification_failed">Failed to store/edit/delete the expense</string>
 
     <string name="select_group">Select group</string>
     <string name="select_user">Select user</string>

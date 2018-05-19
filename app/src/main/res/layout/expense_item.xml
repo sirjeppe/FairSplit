@@ -6,7 +6,7 @@
                 android:padding="15dp">
 
     <TextView
-        android:id="@+id/transactionTitle"
+        android:id="@+id/expenseTitle"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="false"
@@ -14,7 +14,7 @@
         android:textSize="22sp"/>
 
     <TextView
-        android:id="@+id/transactionAmount"
+        android:id="@+id/expenseAmount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -23,20 +23,20 @@
         android:textSize="22sp"/>
 
     <TextView
-        android:id="@+id/transactionComment"
+        android:id="@+id/expenseComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/transactionTitle"
+        android:layout_below="@id/expenseTitle"
         android:text="Optional comment"
         android:textColor="#ffaaaaaa"/>
 
     <TextView
-        android:id="@+id/transactionDateTime"
+        android:id="@+id/expenseDateTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@id/transactionAmount"
+        android:layout_below="@id/expenseAmount"
         android:text="2018-03-26 14:21"
         android:textSize="12sp"/>
 </RelativeLayout>

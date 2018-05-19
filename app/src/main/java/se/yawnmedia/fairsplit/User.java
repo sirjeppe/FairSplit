@@ -13,7 +13,7 @@ public class User {
     public String userName;
     public int salary;
     public ArrayList<Integer> groups = new ArrayList<>();
-    public ArrayList<Transaction> transactions = new ArrayList<>();
+    public ArrayList<Expense> expenses = new ArrayList<>();
     public String apiKey;
     public long keyValidTo;
 
@@ -44,7 +44,7 @@ public class User {
             user.put("userName", this.userName);
             user.put("salary", this.salary);
             user.put("groups", new JSONArray(this.groups));
-            user.put("transactions", new JSONArray(this.transactions));
+            user.put("transactions", new JSONArray(this.expenses));
             user.put("apiKey", this.apiKey);
             user.put("keyValidTo", this.keyValidTo);
         } catch (Exception ex) {
@@ -68,7 +68,7 @@ public class User {
             JSONArray t = response.getJSONArray("data");
             if (t.length() > 0) {
                 for (int i = 0; i < t.length(); i++) {
-                    this.transactions.add(new Transaction(t.getJSONObject(i)));
+                    this.expenses.add(new Expense(t.getJSONObject(i)));
                 }
             }
         } catch (Exception ex) {

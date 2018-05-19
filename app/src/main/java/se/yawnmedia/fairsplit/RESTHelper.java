@@ -67,9 +67,11 @@ public final class RESTHelper {
         JSONObject responseObject = new JSONObject(jsonString);
 
         if (responseObject.getInt("errorCode") == 100 && context != null) {
-            Intent intent = new Intent(context, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            context.getApplicationContext().startActivity(intent);
+            if (!context.getClass().equals(LoginActivity.class)) {
+                Intent intent = new Intent(context, LoginActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                context.getApplicationContext().startActivity(intent);
+            }
         }
 
         return responseObject;
