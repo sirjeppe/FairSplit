@@ -40,6 +40,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = ((FairSplit) this.getApplication());
+        app.setupAppPrefs(this);
         setContentView(R.layout.activity_register);
 
         loginNameView = findViewById(R.id.login_name);
@@ -189,15 +190,15 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 registerData.put("userName", login);
                 registerData.put("password", password);
                 registerData.put("passwordAgain", passwordAgain);
-                response = RESTHelper.POST("/register", registerData, null);
+                response = RESTHelper.POST("/register", registerData, null, RegisterActivity.this);
                 if (response.has("errorCode") && (int) response.get("errorCode") != 0) {
                     Snackbar.make(registerFormView, response.get("message").toString(), Snackbar.LENGTH_LONG).show();
                     return false;
                 } else {
                     JSONObject responseUser = response.getJSONArray("data").getJSONObject(0);
-                    registeredUser = new User(responseUser);
+                    registeredUser = new User(responseUser, RegisterActivity.this);
 
-                    errorMessage = RESTHelper.loginUser(app, login, password);
+                    errorMessage = RESTHelper.loginUser(app, login, password, RegisterActivity.this);
                     if (errorMessage != null) {
                         return false;
                     }

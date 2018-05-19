@@ -1,6 +1,8 @@
 package se.yawnmedia.fairsplit;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.SharedPreferences;
 
 import java.util.ArrayList;
 
@@ -10,6 +12,11 @@ public class FairSplit extends Application {
     private Group currentGroup;
     private ArrayList<User> allUsers = new ArrayList<>();
     private ArrayList<Group> allGroups = new ArrayList<>();
+    private SharedPreferences prefs;
+
+    public void setupAppPrefs(Context context) {
+        prefs = context.getSharedPreferences("se.yawnmedia.fairsplit.app", Context.MODE_PRIVATE);
+    }
 
     public User getCurrentUser() {
         return currentUser;
@@ -73,5 +80,23 @@ public class FairSplit extends Application {
             }
         }
         return false;
+    }
+
+    public void setAPIKey(String apiKey) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("apiKey", apiKey);
+        editor.commit();
+    }
+    public String getAPIKey() {
+        return prefs.getString("apiKey", "");
+    }
+
+    public void setUserID(int userID) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putInt("userID", userID);
+        editor.commit();
+    }
+    public int getUserID() {
+        return prefs.getInt("userID", 0);
     }
 }

@@ -1,5 +1,6 @@
 package se.yawnmedia.fairsplit;
 
+import android.content.Context;
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -16,7 +17,7 @@ public class User {
     public String apiKey;
     public long keyValidTo;
 
-    public User(JSONObject user) {
+    public User(JSONObject user, Context context) {
         try {
             this.userID = user.getInt("userID");
             this.userName = user.getString("userName");
@@ -32,7 +33,7 @@ public class User {
         } catch (Exception ex) {
             Log.e("User(JSONObject)", ex.getMessage());
         }
-        this.fetchTransactionsForUser();
+        this.fetchTransactionsForUser(context);
     }
 
     @Override
@@ -61,9 +62,9 @@ public class User {
         return null;
     }
 
-    private void fetchTransactionsForUser() {
+    private void fetchTransactionsForUser(Context context) {
         try {
-            JSONObject response = RESTHelper.GET("/transaction/byUserID/" + this.userID, this.apiKey);
+            JSONObject response = RESTHelper.GET("/transaction/byUserID/" + this.userID, this.apiKey, context);
             JSONArray t = response.getJSONArray("data");
             if (t.length() > 0) {
                 for (int i = 0; i < t.length(); i++) {

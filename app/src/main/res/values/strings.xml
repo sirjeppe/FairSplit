@@ -27,6 +27,11 @@
     <string name="ocr_error">"Error reading text: %1$s"</string>
     <string name="ok">OK</string>
 
+    <string name="tabname_transactions">Transactions</string>
+    <string name="tabname_groups">Groups</string>
+    <string name="tabname_users">Users</string>
+    <string name="tabname_settings">Settings</string>
+
     <string name="transaction_title">Title</string>
     <string name="transaction_amount">Amount</string>
     <string name="transaction_comment">Comment (optional)</string>

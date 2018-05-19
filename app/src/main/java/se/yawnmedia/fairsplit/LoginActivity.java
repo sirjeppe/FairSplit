@@ -44,6 +44,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         app = ((FairSplit) this.getApplication());
+        app.setupAppPrefs(this);
         setContentView(R.layout.activity_login);
 
         loginNameView = findViewById(R.id.login_name);
@@ -189,7 +190,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         @Override
         protected Boolean doInBackground(Void... params) {
             try {
-                errorMessage = RESTHelper.loginUser(app, login, password);
+                errorMessage = RESTHelper.loginUser(app, login, password, LoginActivity.this);
                 if (errorMessage != null) {
                     return false;
                 }
