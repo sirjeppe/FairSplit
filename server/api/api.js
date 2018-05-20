@@ -238,7 +238,7 @@ let api = {
       if (userID > 0) {
         let u = new User.User();
         u.useDB(db);
-        u.getByID(userID, (res) => {
+        u.getByID(userID, request.headers['fairsplit-apikey'], (res) => {
           callback(res);
         });
       } else {

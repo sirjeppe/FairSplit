@@ -120,7 +120,7 @@ class User {
     );
   }
 
-  getByID(userID, callback) {
+  getByID(userID, apiKey, callback) {
     let that = this;
     this.db.get(
       'SELECT * FROM users WHERE userID=?',
@@ -133,6 +133,10 @@ class User {
           that.userID = row.userID;
           that.userName = row.userName;
           that.salary = row.salary;
+          // ... But don't forget apiKey if request in apiKey matches row.apiKey
+          if (apiKey == row.apiKey) {
+            that.apiKey = row.apiKey;
+          }
           callback(that);
         }
       }
