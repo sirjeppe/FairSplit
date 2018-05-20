@@ -116,14 +116,16 @@ public final class RESTHelper {
     }
 
     public static String loginUserByAPIKey(FairSplit app, Context context) throws IOException, JSONException {
-        String errorMessage = null;
+        String errorMessage;
 
         // Try to login user
         JSONObject response = RESTHelper.GET("/user/" + app.getUserID(), app.getAPIKey(), context);
 
-        if (response.has("errorCode") && (int) response.get("errorCode") != 0) {
+        if (response.has("errorCode") && response.getInt("errorCode") != 0) {
             errorMessage = response.get("message").toString();
             return errorMessage;
+        } else if (!response.has("errorCode")) {
+            return "Server responded with bad response";
         }
 
         JSONObject responseUser = response.getJSONArray("data").getJSONObject(0);
