@@ -133,6 +133,7 @@ class User {
           that.userID = row.userID;
           that.userName = row.userName;
           that.salary = row.salary;
+          that.groups = (row.groups) ? row.groups.split(',').map((n) => { return parseInt(n); }) : [];
           // ... But don't forget apiKey if request in apiKey matches row.apiKey
           if (apiKey == row.apiKey) {
             that.apiKey = row.apiKey;
