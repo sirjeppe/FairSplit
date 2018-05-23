@@ -1,35 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="#fff"
                 android:orientation="vertical"
-                android:padding="15dp">
+                android:paddingBottom="10dp"
+                android:paddingEnd="10dp"
+                android:paddingStart="10dp"
+                android:paddingTop="5dp">
 
     <TextView
         android:id="@+id/expenseTitle"
-        android:layout_width="240dp"
+        android:layout_width="228dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="false"
-        android:text="Biltema"
-        android:textSize="22sp"/>
+        android:textSize="22sp"
+        tools:text="Biltema"/>
 
     <TextView
         android:id="@+id/expenseAmount"
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:text="323,50"
-        android:textSize="22sp"/>
+        android:textAlignment="textEnd"
+        android:textSize="22sp"
+        tools:text="323,50"/>
 
     <TextView
         android:id="@+id/expenseComment"
-        android:layout_width="wrap_content"
+        android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_below="@id/expenseTitle"
-        android:text="Optional comment"
-        android:textColor="#ffaaaaaa"/>
+        android:textColor="#ffaaaaaa"
+        tools:text="Optional comment"/>
 
     <TextView
         android:id="@+id/expenseDateTime"
@@ -37,6 +43,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_below="@id/expenseAmount"
-        android:text="2018-03-26 14:21"
-        android:textSize="12sp"/>
+        android:textSize="12sp"
+        tools:text="2018-03-26 14:21"/>
 </RelativeLayout>

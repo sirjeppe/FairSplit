@@ -23,7 +23,7 @@
         android:layout_weight="1"
         android:ems="10"
         android:hint="@string/transaction_title"
-        android:inputType="text"/>
+        android:inputType="textCapSentences"/>
 
     <EditText
         android:id="@+id/popupComment"
@@ -32,6 +32,6 @@
         android:layout_weight="1"
         android:ems="10"
         android:hint="@string/transaction_comment"
-        android:inputType="text"/>
+        android:inputType="textCapSentences"/>
 
 </LinearLayout>

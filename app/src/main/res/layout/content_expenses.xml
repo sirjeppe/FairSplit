@@ -5,11 +5,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#ddd"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="se.yawnmedia.fairsplit.MainActivity">
 
     <ListView
         android:id="@+id/expenses_list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:divider="#00000000"
+        android:dividerHeight="5dp"
+        android:padding="5dp"/>
+
 </android.support.constraint.ConstraintLayout>

@@ -1,39 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/setting_salary"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="15dp"
-    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="se.yawnmedia.fairsplit.MainActivity">
+    android:background="#ddd"
+    android:padding="5dp">
 
-    <TextView
-        android:id="@+id/setting_salary_title"
-        android:layout_width="240dp"
+    <RelativeLayout
+        android:id="@+id/setting_salary"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="false"
-        android:text="@string/setting_salary_name"
-        android:textSize="22sp"/>
+        android:background="#fff"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:context="se.yawnmedia.fairsplit.MainActivity">
 
-    <TextView
-        android:id="@+id/setting_salary_amount"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
-        android:text="0"
-        android:textSize="22sp"/>
+        <TextView
+            android:id="@+id/setting_salary_title"
+            android:layout_width="228dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
+            android:text="@string/setting_salary_name"
+            android:textSize="22sp"/>
 
-    <TextView
-        android:id="@+id/setting_salary_comment"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_below="@id/setting_salary_title"
-        android:text="@string/setting_salary_comment"
-        android:textColor="#ffaaaaaa"/>
+        <TextView
+            android:id="@+id/setting_salary_amount"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/setting_salary_default"
+            android:textAlignment="textEnd"
+            android:textSize="22sp"/>
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/setting_salary_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/setting_salary_title"
+            android:text="@string/setting_salary_comment"
+            android:textColor="#ffaaaaaa"/>
+
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

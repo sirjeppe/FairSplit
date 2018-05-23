@@ -23,10 +23,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.json.JSONObject;
-
 import java.util.ArrayList;
-import java.util.List;
 
 public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
@@ -70,6 +67,8 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         setContentView(R.layout.activity_login);
 
         loginNameView = findViewById(R.id.login_name);
+        loginNameView.setText(app.getLoginName());
+
         passwordView = findViewById(R.id.password);
         passwordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -81,11 +80,6 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
                 return false;
             }
         });
-
-        //DEBUG
-        loginNameView.setText("testuser");
-        passwordView.setText("testpassword");
-        //END DEBUG
 
         Button mSignInButton = findViewById(R.id.sign_in_button);
         mSignInButton.setOnClickListener(new OnClickListener() {
@@ -124,6 +118,7 @@ public class LoginActivity extends AppCompatActivity implements LoaderCallbacks<
         // Store values at the time of the login attempt.
         String loginName = loginNameView.getText().toString();
         String password = passwordView.getText().toString();
+        app.setLoginName(loginName);
 
         boolean cancel = false;
         View focusView = null;

@@ -20,7 +20,6 @@ import android.widget.EditText;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
@@ -46,12 +45,6 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         loginNameView = findViewById(R.id.login_name);
         passwordView = findViewById(R.id.password);
         passwordAgainView = findViewById(R.id.password_again);
-
-        //DEBUG
-        loginNameView.setText("testuser");
-        passwordView.setText("testpassword");
-        passwordAgainView.setText("testpassword");
-        //END DEBUG
 
         Button mRegisterButton = findViewById(R.id.register_button);
         mRegisterButton.setOnClickListener(new OnClickListener() {
@@ -79,7 +72,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         passwordView.setError(null);
         passwordAgainView.setError(null);
 
-        // Store values at the time of the login attempt.
+        // Store values at the time of the loginName attempt.
         String loginName = loginNameView.getText().toString();
         String password = passwordView.getText().toString();
         String passwordAgain = passwordAgainView.getText().toString();
@@ -112,12 +105,12 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
         }
 
         if (cancel) {
-            // There was an error; don't attempt login and focus the first
+            // There was an error; don't attempt loginName and focus the first
             // form field with an error.
             focusView.requestFocus();
         } else {
             // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
+            // perform the user loginName attempt.
             showProgress(true);
             registerTask = new UserRegisterTask(loginName, password, passwordAgain);
             registerTask.execute((Void) null);
@@ -125,7 +118,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     }
 
     /**
-     * Shows the progress UI and hides the login form.
+     * Shows the progress UI and hides the loginName form.
      */
     private void showProgress(final boolean show) {
         // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
@@ -166,18 +159,18 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
     }
 
     /**
-     * Represents an asynchronous login/registration task used to authenticate
+     * Represents an asynchronous loginName/registration task used to authenticate
      * the user.
      */
     public class UserRegisterTask extends AsyncTask<Void, Void, Boolean> {
 
-        private final String login;
+        private final String loginName;
         private final String password;
         private final String passwordAgain;
         private String errorMessage;
 
-        UserRegisterTask(String login, String password, String passwordAgain) {
-            this.login = login;
+        UserRegisterTask(String loginName, String password, String passwordAgain) {
+            this.loginName = loginName;
             this.password = password;
             this.passwordAgain = passwordAgain;
         }
@@ -187,7 +180,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
             JSONObject response;
             try {
                 JSONObject registerData = new JSONObject();
-                registerData.put("userName", login);
+                registerData.put("userName", loginName);
                 registerData.put("password", password);
                 registerData.put("passwordAgain", passwordAgain);
                 response = RESTHelper.POST("/register", registerData, null, RegisterActivity.this);
@@ -198,7 +191,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                     JSONObject responseUser = response.getJSONArray("data").getJSONObject(0);
                     registeredUser = new User(responseUser, RegisterActivity.this);
 
-                    errorMessage = RESTHelper.loginUser(app, login, password, RegisterActivity.this);
+                    errorMessage = RESTHelper.loginUser(app, loginName, password, RegisterActivity.this);
                     if (errorMessage != null) {
                         return false;
                     }
@@ -208,6 +201,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 return false;
             }
 
+            app.setLoginName(loginName);
             return true;
         }
 

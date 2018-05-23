@@ -239,27 +239,27 @@ public class MainActivity extends AppCompatActivity {
                         actionButton.setOnClickListener(addTransactionListener);
                     }
                 });
-    //            groupsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-    //                @Override
-    //                public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-    //                    TextView groupName = view.findViewById(R.id.groupName);
-    //                    final Group group = (Group) groupName.getTag();
-    //
-    //                    AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-    //                    alert.setTitle("Remove " + group.groupName + "?");
-    //                    alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-    //                        public void onClick(DialogInterface dialog, int whichButton) {
-    //                            group.deleteMe = true;
-    //                            new PostGroupTask().execute(group);
-    //                        }
-    //                    });
-    //                    alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-    //                        public void onClick(DialogInterface dialog, int whichButton) {}
-    //                    });
-    //                    alert.show();
-    //                    return true;
-    //                }
-    //            });
+//                groupsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+//                    @Override
+//                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+//                        RadioButton groupRadioButton = view.findViewById(R.id.groupRadioButton);
+//                        final Group group = (Group) groupRadioButton.getTag();
+//
+//                        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+//                        alert.setTitle("Remove " + group.groupName + "?");
+//                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int whichButton) {
+//                                group.deleteMe = true;
+//                                new PostGroupTask().execute(group);
+//                            }
+//                        });
+//                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int whichButton) {}
+//                        });
+//                        alert.show();
+//                        return true;
+//                    }
+//                });
                 for (int groupID : app.getCurrentUser().groups) {
                     groupsAdapter.add(app.getGroupByID(groupID));
                 }
@@ -466,9 +466,7 @@ public class MainActivity extends AppCompatActivity {
                 int salary = Integer.parseInt(salaryEdit.getText().toString());
                 app.getCurrentUser().salary = salary;
                 try {
-                    new PostUserTask().execute(app.getCurrentUser()).get();
-                    TextView salaryTextView = findViewById(R.id.setting_salary_amount);
-                    salaryTextView.setText("" + app.getCurrentUser().salary);
+                    new PostUserTask().execute(app.getCurrentUser());
                 } catch (Exception ex) {
                     Log.e("updateSalary", ex.getMessage());
                 }
@@ -506,6 +504,8 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(Boolean success) {
             if (success) {
+                TextView salaryTextView = findViewById(R.id.setting_salary_amount);
+                salaryTextView.setText("" + app.getCurrentUser().salary);
                 Snackbar.make(findViewById(R.id.logo), R.string.settings_saved, Snackbar.LENGTH_LONG).show();
             } else {
                 Snackbar.make(findViewById(R.id.logo), R.string.settings_save_failed, Snackbar.LENGTH_LONG).show();

@@ -99,4 +99,11 @@ public class FairSplit extends Application {
     public int getUserID() {
         return prefs.getInt("userID", 0);
     }
+
+    public void setLoginName(String userName) {
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("loginName", userName);
+        editor.commit();
+    }
+    public String getLoginName() { return prefs.getString("loginName", ""); }
 }

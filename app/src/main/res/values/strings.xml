@@ -8,7 +8,7 @@
     <string name="text_or">or</string>
     <string name="action_register">Register new account</string>
     <string name="action_menu">Menu</string>
-    <string name="register_text">Fill out the form below to create a new account. You can use any login name (it doesn\'t have to be your e-mail address).</string>
+    <string name="register_text">Fill out the form below to create a new account. You can use any loginName name (it doesn\'t have to be your e-mail address).</string>
     <string name="passwords_not_matching">Passwords do not match</string>
     <string name="action_sign_in_short">Sign in</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -43,6 +43,7 @@
 
     <string name="setting_salary_name">My salary</string>
     <string name="setting_salary_comment">Tap to change your salary</string>
+    <string name="setting_salary_default">0</string>
     <string name="settings_saved">Settings saved!</string>
     <string name="settings_save_failed">Failed to save settings...</string>
 </resources>
