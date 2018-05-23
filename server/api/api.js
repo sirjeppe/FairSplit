@@ -204,7 +204,10 @@ let api = {
   },
 
   login: function(db, request, response, body, callback) {
-    if (typeof(body.userName) === 'undefined' || typeof(body.password) === 'undefined') {
+    if (
+      typeof(body.userName) === 'undefined'
+      || typeof(body.password) === 'undefined'
+    ) {
       callback(Error.ErrorCodes.NO_BODY);
     } else {
       let u = new User.User();
@@ -216,7 +219,11 @@ let api = {
   },
 
   register: function(db, request, response, body, callback) {
-    if (typeof(body.userName) === 'undefined' || typeof(body.password) === 'undefined' || typeof(body.passwordAgain) === 'undefined') {
+    if (
+      typeof(body.userName) === 'undefined'
+      || typeof(body.password) === 'undefined'
+      || typeof(body.passwordAgain) === 'undefined'
+    ) {
       callback(Error.ErrorCodes.MALFORMED_REQUEST);
     } else {
       if (body.password !== body.passwordAgain) {
@@ -247,7 +254,7 @@ let api = {
     } else if (request.method === 'PUT') {
       if (
         typeof(body.salary) === 'undefined'
-        || isNan(userID)
+        || typeof(userID) !== 'number'
         || userID <= 0
       ) {
         callback(Error.ErrorCodes.MALFORMED_REQUEST);
