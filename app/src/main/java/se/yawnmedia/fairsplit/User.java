@@ -44,13 +44,21 @@ public class User {
             user.put("userName", this.userName);
             user.put("salary", this.salary);
             user.put("groups", new JSONArray(this.groups));
-            user.put("transactions", new JSONArray(this.expenses));
             user.put("apiKey", this.apiKey);
             user.put("keyValidTo", this.keyValidTo);
         } catch (Exception ex) {
             Log.e("User.toString()", ex.getMessage());
         }
         return user.toString();
+    }
+
+    public JSONObject toJSONObject() {
+        try {
+            return new JSONObject(this.toString());
+        } catch (Exception ex) {
+            Log.e("User.toJSONObject()", ex.getMessage());
+        }
+        return null;
     }
 
     public static User findUserByID(int userID, ArrayList<User> users) {

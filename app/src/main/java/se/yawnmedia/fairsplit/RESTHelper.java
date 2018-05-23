@@ -20,7 +20,9 @@ import javax.net.ssl.HttpsURLConnection;
 
 public final class RESTHelper {
     public static String baseURL = Settings.BaseURL + "/api";
-    public static String transactionEndpoint = "/transaction";
+    public static String expenseEndpoint = "/transaction";
+    public static String groupEndpoint = "/group";
+    public static String userEndpoint = "/user";
 
     public static JSONObject DoRequest(String method, String uri, JSONObject data, String apiKey, Context context) throws IOException, JSONException {
         URL url = new URL(baseURL + uri);

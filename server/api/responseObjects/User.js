@@ -135,10 +135,25 @@ class User {
           that.salary = row.salary;
           that.groups = (row.groups) ? row.groups.split(',').map((n) => { return parseInt(n); }) : [];
           // ... But don't forget apiKey if request in apiKey matches row.apiKey
+          // (required for successive API calls from app)
           if (apiKey == row.apiKey) {
             that.apiKey = row.apiKey;
           }
           callback(that);
+        }
+      }
+    );
+  }
+
+  setSalary(userID, salary, callback) {
+    this.db.run(
+      'UPDATE users SET salary = ? WHERE userID = ?',
+      [salary, userID],
+      function(err) {
+        if (err) {
+          callback(err);
+        } else {
+          callback(true);
         }
       }
     );

@@ -232,9 +232,9 @@ let api = {
   },
 
   user: function(db, request, response, body, callback) {
+    let pathArray = request.url.split('/');
+    let userID = parseInt(pathArray[pathArray.length - 1]);
     if (request.method === 'GET') {
-      let pathArray = request.url.split('/');
-      let userID = parseInt(pathArray[pathArray.length - 1]);
       if (userID > 0) {
         let u = new User.User();
         u.useDB(db);
@@ -243,6 +243,20 @@ let api = {
         });
       } else {
         callback(Error.ErrorCodes.MALFORMED_REQUEST);
+      }
+    } else if (request.method === 'PUT') {
+      if (
+        typeof(body.salary) === 'undefined'
+        || isNan(userID)
+        || userID <= 0
+      ) {
+        callback(Error.ErrorCodes.MALFORMED_REQUEST);
+      } else {
+        let u = new User.User();
+        u.useDB(db);
+        u.setSalary(userID, body.salary, (res) => {
+          callback(res);
+        });
       }
     }
   },

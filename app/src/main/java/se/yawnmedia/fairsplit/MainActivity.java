@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import org.json.JSONObject;
@@ -136,6 +137,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         viewPager.setCurrentItem(0);
+        actionButton.setOnClickListener(addTransactionListener);
+        actionButton.setVisibility(View.VISIBLE);
     }
 
     public enum ModelObject {
@@ -181,17 +184,17 @@ public class MainActivity extends AppCompatActivity {
             // Expenses part
             if (position == 0) {
                 expenseAdapter = new ExpenseAdapter(MainActivity.this, R.layout.expense_item);
-                ListView transactionListView = findViewById(R.id.expenses_list_view);
-                transactionListView.setAdapter(expenseAdapter);
-                transactionListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                ListView expenseListView = findViewById(R.id.expenses_list_view);
+                expenseListView.setAdapter(expenseAdapter);
+                expenseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         TextView transactionTitle = view.findViewById(R.id.expenseTitle);
                         Expense expense = (Expense) transactionTitle.getTag();
-                        showTransactionAlert(expense);
+                        showExpensePopup(expense);
                     }
                 });
-                transactionListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                expenseListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                         TextView transactionTitle = view.findViewById(R.id.expenseTitle);
@@ -202,7 +205,7 @@ public class MainActivity extends AppCompatActivity {
                         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
                                 expense.deleteMe = true;
-                                new PostTransactionTask().execute(expense);
+                                new PostExpenseTask().execute(expense);
                             }
                         });
                         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -289,8 +292,15 @@ public class MainActivity extends AppCompatActivity {
 
             // Settings part
             else if (position == 3) {
-                EditText salary = findViewById(R.id.salary_input);
+                TextView salary = findViewById(R.id.setting_salary_amount);
                 salary.setText("" + app.getCurrentUser().salary);
+                RelativeLayout settingSalary = findViewById(R.id.setting_salary);
+                settingSalary.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        showSalaryPopup();
+                    }
+                });
             }
             // End settings part
 
@@ -347,7 +357,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showTransactionAlert(final Expense expense) {
+    private void showExpensePopup(final Expense expense) {
         AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
         if (expense != null) {
             alert.setTitle("Edit expense");
@@ -388,9 +398,9 @@ public class MainActivity extends AppCompatActivity {
                 try {
                     toPost.userID = app.getCurrentUser().userID;
                     toPost.groupID = app.getCurrentGroup().groupID;
-                    new PostTransactionTask().execute(toPost);
+                    new PostExpenseTask().execute(toPost);
                 } catch (Exception ex) {
-                    Log.e("updateTransaction", ex.getMessage());
+                    Log.e("updateExpense", ex.getMessage());
                 }
             }
         });
@@ -404,29 +414,29 @@ public class MainActivity extends AppCompatActivity {
         alertDialog.show();
     }
 
-    private class PostTransactionTask extends AsyncTask<Expense, Void, Expense> {
+    private class PostExpenseTask extends AsyncTask<Expense, Void, Expense> {
         protected Expense doInBackground(Expense... expense) {
             try {
-                JSONObject transactionJSON = new JSONObject(expense[0].toString());
+                JSONObject expenseJSON = new JSONObject(expense[0].toString());
                 if (expense[0].transactionID == 0) {
-                    JSONObject transactionResponse = RESTHelper.POST(RESTHelper.transactionEndpoint, transactionJSON, app.getCurrentUser().apiKey, MainActivity.this);
-                    JSONObject newTransaction = transactionResponse.getJSONArray("data").getJSONObject(0);
-                    return new Expense(newTransaction);
+                    JSONObject expenseResponse = RESTHelper.POST(RESTHelper.expenseEndpoint, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
+                    JSONObject newExpense = expenseResponse.getJSONArray("data").getJSONObject(0);
+                    return new Expense(newExpense);
                 } else if (expense[0].deleteMe == true) {
-                    JSONObject transactionResponse = RESTHelper.DELETE(RESTHelper.transactionEndpoint + "/" + expense[0].transactionID, transactionJSON, app.getCurrentUser().apiKey, MainActivity.this);
-                    if (transactionResponse.getInt("errorCode") > 0) {
+                    JSONObject expenseResponse = RESTHelper.DELETE(RESTHelper.expenseEndpoint + "/" + expense[0].transactionID, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
+                    if (expenseResponse.getInt("errorCode") > 0) {
                         return null;
                     }
                     return expense[0];
                 } else {
-                    JSONObject transactionResponse = RESTHelper.PUT(RESTHelper.transactionEndpoint + "/" + expense[0].transactionID, transactionJSON, app.getCurrentUser().apiKey, MainActivity.this);
-                    if (transactionResponse.getInt("errorCode") > 0) {
+                    JSONObject expenseResponse = RESTHelper.PUT(RESTHelper.expenseEndpoint + "/" + expense[0].transactionID, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
+                    if (expenseResponse.getInt("errorCode") > 0) {
                         return null;
                     }
                     return expense[0];
                 }
             } catch (Exception ex) {
-                Log.e("PostTransactionTask", ex.getMessage());
+                Log.e("PostExpenseTask", ex.getMessage());
             }
             return null;
         }
@@ -440,11 +450,74 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    private void showSalaryPopup() {
+        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
+        LayoutInflater inflater = MainActivity.this.getLayoutInflater();
+        final View dialogView = inflater.inflate(R.layout.set_salary_popup, null);
+
+        EditText salaryEdit = dialogView.findViewById(R.id.salary);
+        salaryEdit.setText("" + app.getCurrentUser().salary);
+        salaryEdit.setSelection(salaryEdit.getText().length());
+
+        alert.setView(dialogView);
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                EditText salaryEdit = dialogView.findViewById(R.id.salary);
+                int salary = Integer.parseInt(salaryEdit.getText().toString());
+                app.getCurrentUser().salary = salary;
+                try {
+                    new PostUserTask().execute(app.getCurrentUser()).get();
+                    TextView salaryTextView = findViewById(R.id.setting_salary_amount);
+                    salaryTextView.setText("" + app.getCurrentUser().salary);
+                } catch (Exception ex) {
+                    Log.e("updateSalary", ex.getMessage());
+                }
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                //Put actions for CANCEL button here, or leave in blank
+            }
+        });
+        AlertDialog alertDialog = alert.create();
+        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        alertDialog.show();
+    }
+
+    private class PostUserTask extends AsyncTask<User, Void, Boolean> {
+        protected Boolean doInBackground(User... user) {
+            try {
+                User toPost = user[0];
+                JSONObject userResponse = RESTHelper.PUT(
+                    RESTHelper.userEndpoint + "/" + app.getCurrentUser().userID,
+                    toPost.toJSONObject(),
+                    app.getCurrentUser().apiKey,
+                    MainActivity.this
+                );
+                if (userResponse.getInt("errorCode") > 0) {
+                    return false;
+                }
+                return true;
+            } catch (Exception ex) {
+                Log.e("PostUserTask", ex.getMessage());
+            }
+            return false;
+        }
+
+        protected void onPostExecute(Boolean success) {
+            if (success) {
+                Snackbar.make(findViewById(R.id.logo), R.string.settings_saved, Snackbar.LENGTH_LONG).show();
+            } else {
+                Snackbar.make(findViewById(R.id.logo), R.string.settings_save_failed, Snackbar.LENGTH_LONG).show();
+            }
+        }
+    }
+
     // Action button listeners
     private View.OnClickListener addTransactionListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
-            showTransactionAlert(null);
+            showExpensePopup(null);
         }
     };
 

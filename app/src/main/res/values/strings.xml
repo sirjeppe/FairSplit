@@ -4,7 +4,6 @@
     <string name="prompt_login_name">Login name</string>
     <string name="prompt_password">Password</string>
     <string name="prompt_password_again">Password again</string>
-    <string name="prompt_salary">Salary</string>
     <string name="action_sign_in">Sign in</string>
     <string name="text_or">or</string>
     <string name="action_register">Register new account</string>
@@ -41,4 +40,9 @@
     <string name="select_group">Select group</string>
     <string name="select_user">Select user</string>
     <string name="settings">Settings</string>
+
+    <string name="setting_salary_name">My salary</string>
+    <string name="setting_salary_comment">Tap to change your salary</string>
+    <string name="settings_saved">Settings saved!</string>
+    <string name="settings_save_failed">Failed to save settings...</string>
 </resources>
