@@ -36,10 +36,10 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.expense_item, parent, false);
-            viewHolder.title = convertView.findViewById(R.id.expenseTitle);
-            viewHolder.amount = convertView.findViewById(R.id.expenseAmount);
-            viewHolder.comment = convertView.findViewById(R.id.expenseComment);
-            viewHolder.datetime = convertView.findViewById(R.id.expenseDateTime);
+            viewHolder.title = convertView.findViewById(R.id.expense_title);
+            viewHolder.amount = convertView.findViewById(R.id.expense_amount);
+            viewHolder.comment = convertView.findViewById(R.id.expense_comment);
+            viewHolder.datetime = convertView.findViewById(R.id.expense_datetime);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();

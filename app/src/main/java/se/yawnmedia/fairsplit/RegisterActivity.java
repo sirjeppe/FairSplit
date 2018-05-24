@@ -212,6 +212,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
 
             if (success) {
                 Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
                 startActivity(intent);
                 finish();
             } else {

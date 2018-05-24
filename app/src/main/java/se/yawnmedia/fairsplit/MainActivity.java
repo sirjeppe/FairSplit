@@ -17,6 +17,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView usersTitle;
     private TextView settingsTitle;
     private FloatingActionButton actionButton;
+    private ViewPager viewPager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,41 @@ public class MainActivity extends AppCompatActivity {
         settingsTitle = findViewById(R.id.settings_title);
         app = ((FairSplit) this.getApplication());
         app.setupAppPrefs(this);
+        viewPager = findViewById(R.id.vp);
+
+        // Make top menu clickable
+        // Expenses
+        LinearLayout topExpensesGroup = findViewById(R.id.top_expenses_group);
+        topExpensesGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(0);
+            }
+        });
+        // Groups
+        LinearLayout topGroupsGroup = findViewById(R.id.top_groups_group);
+        topGroupsGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(1);
+            }
+        });
+        // Users
+        LinearLayout topUsersGroup = findViewById(R.id.top_users_group);
+        topUsersGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(2);
+            }
+        });
+        // Settings
+        LinearLayout topSettingsGroup = findViewById(R.id.top_settings_group);
+        topSettingsGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                viewPager.setCurrentItem(3);
+            }
+        });
 
         // Default to show logged in user after logging in
         if (app.getSelectedUser() == null) {
@@ -82,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void initiateViewPager() {
-        ViewPager viewPager = findViewById(R.id.vp);
         viewPager.setAdapter(new CustomPagerAdapter(this));
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -103,6 +139,8 @@ public class MainActivity extends AppCompatActivity {
                     case 2:
                         usersTitle.setAlpha(1 - positionOffset);
                         settingsTitle.setAlpha(positionOffset);
+                        expensesTitle.setAlpha(0);
+                        groupsTitle.setAlpha(0);
                         break;
                 }
             }
@@ -189,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
                 expenseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        TextView transactionTitle = view.findViewById(R.id.expenseTitle);
+                        TextView transactionTitle = view.findViewById(R.id.expense_title);
                         Expense expense = (Expense) transactionTitle.getTag();
                         showExpensePopup(expense);
                     }
@@ -197,7 +235,7 @@ public class MainActivity extends AppCompatActivity {
                 expenseListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        TextView transactionTitle = view.findViewById(R.id.expenseTitle);
+                        TextView transactionTitle = view.findViewById(R.id.expense_title);
                         final Expense expense = (Expense) transactionTitle.getTag();
 
                         AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
@@ -234,8 +272,7 @@ public class MainActivity extends AppCompatActivity {
                         RadioButton groupRadioButton = view.findViewById(R.id.groupRadioButton);
                         Group group = (Group) groupRadioButton.getTag();
                         app.setCurrentGroup(group);
-                        ViewPager vp = findViewById(R.id.vp);
-                        vp.setCurrentItem(0);
+                        viewPager.setCurrentItem(0);
                         actionButton.setOnClickListener(addTransactionListener);
                     }
                 });
@@ -278,8 +315,7 @@ public class MainActivity extends AppCompatActivity {
                         RadioButton userRadioButton = view.findViewById(R.id.userRadioButton);
                         User user = (User) userRadioButton.getTag();
                         app.setSelectedUser(user);
-                        ViewPager vp = findViewById(R.id.vp);
-                        vp.setCurrentItem(0);
+                        viewPager.setCurrentItem(0);
                         actionButton.setOnClickListener(addTransactionListener);
                     }
                 });
@@ -503,12 +539,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Boolean success) {
+            TextView salaryTextView = findViewById(R.id.setting_salary_amount);
             if (success) {
-                TextView salaryTextView = findViewById(R.id.setting_salary_amount);
                 salaryTextView.setText("" + app.getCurrentUser().salary);
-                Snackbar.make(findViewById(R.id.logo), R.string.settings_saved, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(salaryTextView, R.string.settings_saved, Snackbar.LENGTH_LONG).show();
             } else {
-                Snackbar.make(findViewById(R.id.logo), R.string.settings_save_failed, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(salaryTextView, R.string.settings_save_failed, Snackbar.LENGTH_LONG).show();
             }
         }
     }

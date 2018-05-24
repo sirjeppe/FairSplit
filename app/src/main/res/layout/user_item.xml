@@ -16,5 +16,6 @@
         android:padding="15dp"
         android:paddingStart="5dp"
         android:text="UserName"
+        android:textColor="@color/text_color"
         android:textSize="22sp"/>
 </RelativeLayout>

@@ -11,7 +11,7 @@
                 android:paddingTop="5dp">
 
     <TextView
-        android:id="@+id/expenseTitle"
+        android:id="@+id/expense_title"
         android:layout_width="228dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="false"
@@ -19,7 +19,7 @@
         tools:text="Biltema"/>
 
     <TextView
-        android:id="@+id/expenseAmount"
+        android:id="@+id/expense_amount"
         android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
@@ -29,20 +29,20 @@
         tools:text="323,50"/>
 
     <TextView
-        android:id="@+id/expenseComment"
+        android:id="@+id/expense_comment"
         android:layout_width="240dp"
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
-        android:layout_below="@id/expenseTitle"
+        android:layout_below="@id/expense_title"
         android:textColor="#ffaaaaaa"
         tools:text="Optional comment"/>
 
     <TextView
-        android:id="@+id/expenseDateTime"
+        android:id="@+id/expense_datetime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:layout_below="@id/expenseAmount"
+        android:layout_below="@id/expense_amount"
         android:textSize="12sp"
         tools:text="2018-03-26 14:21"/>
 </RelativeLayout>
