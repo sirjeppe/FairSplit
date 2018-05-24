@@ -70,6 +70,14 @@ public class User {
         return null;
     }
 
+    public double sumExpenses() {
+        double sum = 0;
+        for (int i = 0; i < expenses.size(); i++) {
+            sum += expenses.get(i).amount;
+        }
+        return sum;
+    }
+
     private void fetchTransactionsForUser(Context context) {
         try {
             JSONObject response = RESTHelper.GET("/transaction/byUserID/" + this.userID, this.apiKey, context);

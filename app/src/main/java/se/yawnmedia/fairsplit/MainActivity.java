@@ -224,6 +224,9 @@ public class MainActivity extends AppCompatActivity {
 
             // Expenses part
             if (position == 0) {
+                // Show who's selected and total expenses
+                updateSelectedUser();
+
                 expenseAdapter = new ExpenseAdapter(MainActivity.this, R.layout.expense_item);
                 ListView expenseListView = findViewById(R.id.expenses_list_view);
                 expenseListView.setAdapter(expenseAdapter);
@@ -369,17 +372,29 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void updateTransaction(Expense newExpense) {
-        if (!app.getCurrentUser().expenses.contains(newExpense)) {
-            app.getCurrentUser().expenses.add(newExpense);
+    private void updateExpense(Expense newExpense) {
+        // Safety net
+        if (app.getSelectedUser() == app.getCurrentUser()) {
+            if (!app.getCurrentUser().expenses.contains(newExpense)) {
+                app.getCurrentUser().expenses.add(newExpense);
+            }
+            if (expenseAdapter.getPosition(newExpense) < 0) {
+                expenseAdapter.insert(newExpense, 0);
+            }
+            if (newExpense.deleteMe) {
+                expenseAdapter.remove(newExpense);
+                app.getCurrentUser().expenses.remove(newExpense);
+            }
+            updateSelectedUser();
+            expenseAdapter.notifyDataSetChanged();
         }
-        if (expenseAdapter.getPosition(newExpense) < 0) {
-            expenseAdapter.add(newExpense);
-        }
-        if (newExpense.deleteMe) {
-            expenseAdapter.remove(newExpense);
-        }
-        expenseAdapter.notifyDataSetChanged();
+    }
+
+    private void updateSelectedUser() {
+        TextView selectedUserName = findViewById(R.id.selected_user_name);
+        TextView selectedUserExpensesTotal = findViewById(R.id.selected_user_expenses_total);
+        selectedUserName.setText(app.getSelectedUser().userName);
+        selectedUserExpensesTotal.setText(String.format("%.2f", app.getSelectedUser().sumExpenses()));
     }
 
     private void switchUser(String user) {
@@ -388,9 +403,10 @@ public class MainActivity extends AppCompatActivity {
             if (groupUser != null && groupUser.userName.equals(user)) {
                 expenseAdapter.clear();
                 for (Expense expense : groupUser.expenses) {
-                    expenseAdapter.add(expense);
+                    expenseAdapter.insert(expense, 0);
                 }
                 expenseAdapter.notifyDataSetChanged();
+                updateSelectedUser();
                 return;
             }
         }
@@ -482,7 +498,7 @@ public class MainActivity extends AppCompatActivity {
 
         protected void onPostExecute(Expense expense) {
             if (expense != null) {
-                updateTransaction(expense);
+                updateExpense(expense);
             } else {
                 Snackbar.make(findViewById(R.id.logo), R.string.transaction_modification_failed, Snackbar.LENGTH_LONG).show();
             }

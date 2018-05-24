@@ -9,4 +9,5 @@
     <color name="top_menu_button">#333333</color>
     <color name="toolbar_background">#fff4f4f4</color>
     <color name="text_color">#666</color>
+    <color name="text_color_inverted">#ddd</color>
 </resources>

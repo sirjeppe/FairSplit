@@ -27,6 +27,9 @@
     <string name="ocr_error">"Error reading text: %1$s"</string>
     <string name="ok">OK</string>
 
+    <string name="selected_user_text">Showing expenses for:</string>
+    <string name="selected_user_expense_total">Expenses total</string>
+
     <string name="tabname_expenses">Expenses</string>
     <string name="tabname_groups">Groups</string>
     <string name="tabname_users">Users</string>
