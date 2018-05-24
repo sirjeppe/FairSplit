@@ -25,6 +25,8 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.util.Locale;
+
 public class MainActivity extends AppCompatActivity {
 
     private FairSplit app;
@@ -128,6 +130,7 @@ public class MainActivity extends AppCompatActivity {
                         expensesTitle.setAlpha(1 - positionOffset);
                         groupsTitle.setAlpha(positionOffset);
                         usersTitle.setAlpha(0);
+                        settingsTitle.setAlpha(0);
                         break;
 
                     case 1:
@@ -139,8 +142,8 @@ public class MainActivity extends AppCompatActivity {
                     case 2:
                         usersTitle.setAlpha(1 - positionOffset);
                         settingsTitle.setAlpha(positionOffset);
-                        expensesTitle.setAlpha(0);
                         groupsTitle.setAlpha(0);
+                        expensesTitle.setAlpha(0);
                         break;
                 }
             }
@@ -255,7 +258,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 for (Expense expense : app.getSelectedUser().expenses) {
-                    expenseAdapter.add(expense);
+                    expenseAdapter.insert(expense, 0);
                 }
                 expenseAdapter.notifyDataSetChanged();
             }
@@ -329,7 +332,7 @@ public class MainActivity extends AppCompatActivity {
             // Settings part
             else if (position == 3) {
                 TextView salary = findViewById(R.id.setting_salary_amount);
-                salary.setText("" + app.getCurrentUser().salary);
+                salary.setText(String.format(Locale.US, "%d", app.getCurrentUser().salary));
                 RelativeLayout settingSalary = findViewById(R.id.setting_salary);
                 settingSalary.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -404,7 +407,7 @@ public class MainActivity extends AppCompatActivity {
         final View dialogView = inflater.inflate(R.layout.add_expense_popup, null);
         if (expense != null) {
             EditText popupAmount = dialogView.findViewById(R.id.popupAmount);
-            popupAmount.setText("" + expense.amount);
+            popupAmount.setText(String.format(Locale.US, "%.2f", expense.amount));
             popupAmount.setSelection(popupAmount.getText().length());
             ((EditText) dialogView.findViewById(R.id.popupTitle)).setText(expense.title);
             ((EditText) dialogView.findViewById(R.id.popupComment)).setText(expense.comment);
@@ -458,7 +461,7 @@ public class MainActivity extends AppCompatActivity {
                     JSONObject expenseResponse = RESTHelper.POST(RESTHelper.expenseEndpoint, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
                     JSONObject newExpense = expenseResponse.getJSONArray("data").getJSONObject(0);
                     return new Expense(newExpense);
-                } else if (expense[0].deleteMe == true) {
+                } else if (expense[0].deleteMe) {
                     JSONObject expenseResponse = RESTHelper.DELETE(RESTHelper.expenseEndpoint + "/" + expense[0].transactionID, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
                     if (expenseResponse.getInt("errorCode") > 0) {
                         return null;
@@ -492,7 +495,7 @@ public class MainActivity extends AppCompatActivity {
         final View dialogView = inflater.inflate(R.layout.set_salary_popup, null);
 
         EditText salaryEdit = dialogView.findViewById(R.id.salary);
-        salaryEdit.setText("" + app.getCurrentUser().salary);
+        salaryEdit.setText(String.format(Locale.US, "%d", app.getCurrentUser().salary));
         salaryEdit.setSelection(salaryEdit.getText().length());
 
         alert.setView(dialogView);
@@ -541,7 +544,7 @@ public class MainActivity extends AppCompatActivity {
         protected void onPostExecute(Boolean success) {
             TextView salaryTextView = findViewById(R.id.setting_salary_amount);
             if (success) {
-                salaryTextView.setText("" + app.getCurrentUser().salary);
+                salaryTextView.setText(String.format(Locale.US, "%d", app.getCurrentUser().salary));
                 Snackbar.make(salaryTextView, R.string.settings_saved, Snackbar.LENGTH_LONG).show();
             } else {
                 Snackbar.make(salaryTextView, R.string.settings_save_failed, Snackbar.LENGTH_LONG).show();
