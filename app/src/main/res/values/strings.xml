@@ -44,9 +44,9 @@
     <string name="select_user">Select user</string>
     <string name="settings">Settings</string>
 
-    <string name="setting_salary_name">My salary</string>
-    <string name="setting_salary_comment">Tap to change your salary</string>
-    <string name="setting_salary_default">0</string>
+    <string name="setting_income_name">My income</string>
+    <string name="setting_income_comment">Tap to change your monthly income (after taxes)</string>
+    <string name="setting_income_default">0</string>
     <string name="settings_saved">Settings saved!</string>
     <string name="settings_save_failed">Failed to save settings...</string>
 </resources>

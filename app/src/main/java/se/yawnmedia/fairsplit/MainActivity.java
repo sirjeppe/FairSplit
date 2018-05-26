@@ -334,13 +334,13 @@ public class MainActivity extends AppCompatActivity {
 
             // Settings part
             else if (position == 3) {
-                TextView salary = findViewById(R.id.setting_salary_amount);
-                salary.setText(String.format(Locale.US, "%d", app.getCurrentUser().salary));
-                RelativeLayout settingSalary = findViewById(R.id.setting_salary);
-                settingSalary.setOnClickListener(new View.OnClickListener() {
+                TextView income = findViewById(R.id.setting_income_amount);
+                income.setText(String.format(Locale.US, "%d", app.getCurrentUser().income));
+                RelativeLayout settingIncome = findViewById(R.id.setting_income);
+                settingIncome.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        showSalaryPopup();
+                        showIncomePopup();
                     }
                 });
             }
@@ -505,25 +505,25 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showSalaryPopup() {
+    private void showIncomePopup() {
         AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
         LayoutInflater inflater = MainActivity.this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.set_salary_popup, null);
+        final View dialogView = inflater.inflate(R.layout.set_income_popup, null);
 
-        EditText salaryEdit = dialogView.findViewById(R.id.salary);
-        salaryEdit.setText(String.format(Locale.US, "%d", app.getCurrentUser().salary));
-        salaryEdit.setSelection(salaryEdit.getText().length());
+        EditText incomeEdit = dialogView.findViewById(R.id.income);
+        incomeEdit.setText(String.format(Locale.US, "%d", app.getCurrentUser().income));
+        incomeEdit.setSelection(incomeEdit.getText().length());
 
         alert.setView(dialogView);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
-                EditText salaryEdit = dialogView.findViewById(R.id.salary);
-                int salary = Integer.parseInt(salaryEdit.getText().toString());
-                app.getCurrentUser().salary = salary;
+                EditText incomeEdit = dialogView.findViewById(R.id.income);
+                int income = Integer.parseInt(incomeEdit.getText().toString());
+                app.getCurrentUser().income = income;
                 try {
                     new PostUserTask().execute(app.getCurrentUser());
                 } catch (Exception ex) {
-                    Log.e("updateSalary", ex.getMessage());
+                    Log.e("updateIncome", ex.getMessage());
                 }
             }
         });
@@ -558,12 +558,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         protected void onPostExecute(Boolean success) {
-            TextView salaryTextView = findViewById(R.id.setting_salary_amount);
+            TextView incomeTextView = findViewById(R.id.setting_income_amount);
             if (success) {
-                salaryTextView.setText(String.format(Locale.US, "%d", app.getCurrentUser().salary));
-                Snackbar.make(salaryTextView, R.string.settings_saved, Snackbar.LENGTH_LONG).show();
+                incomeTextView.setText(String.format(Locale.US, "%d", app.getCurrentUser().income));
+                Snackbar.make(incomeTextView, R.string.settings_saved, Snackbar.LENGTH_LONG).show();
             } else {
-                Snackbar.make(salaryTextView, R.string.settings_save_failed, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(incomeTextView, R.string.settings_save_failed, Snackbar.LENGTH_LONG).show();
             }
         }
     }

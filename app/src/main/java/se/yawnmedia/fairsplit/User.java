@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class User {
     public int userID;
     public String userName;
-    public int salary;
+    public int income;
     public ArrayList<Integer> groups = new ArrayList<>();
     public ArrayList<Expense> expenses = new ArrayList<>();
     public String apiKey;
@@ -21,7 +21,7 @@ public class User {
         try {
             this.userID = user.getInt("userID");
             this.userName = user.getString("userName");
-            this.salary = user.getInt("salary");
+            this.income = user.getInt("income");
             this.apiKey = user.getString("apiKey");
             this.keyValidTo = user.getLong("keyValidTo");
             JSONArray groups = user.getJSONArray("groups");
@@ -42,7 +42,7 @@ public class User {
         try {
             user.put("userID", this.userID);
             user.put("userName", this.userName);
-            user.put("salary", this.salary);
+            user.put("income", this.income);
             user.put("groups", new JSONArray(this.groups));
             user.put("apiKey", this.apiKey);
             user.put("keyValidTo", this.keyValidTo);

@@ -16,7 +16,7 @@ class User {
     this.type = 'User';
     this.userID = 0;
     this.userName = '';
-    this.salary = 0;
+    this.income = 0;
     this.groups = [];
     this.apiKey = '';
     this.keyValidTo = 0;
@@ -49,7 +49,7 @@ class User {
         if (hash.digest('hex') === row.password) {
           that.userID = row.userID;
           that.userName = row.userName;
-          that.salary = row.salary;
+          that.income = row.income;
           that.groups = (row.groups) ? row.groups.split(',').map((n) => { return parseInt(n); }) : [];
           // Update API key
           let apiKey = that._generateAPIKey();
@@ -132,7 +132,7 @@ class User {
           // Only return required fields
           that.userID = row.userID;
           that.userName = row.userName;
-          that.salary = row.salary;
+          that.income = row.income;
           that.groups = (row.groups) ? row.groups.split(',').map((n) => { return parseInt(n); }) : [];
           // ... But don't forget apiKey if request in apiKey matches row.apiKey
           // (required for successive API calls from app)
@@ -145,10 +145,10 @@ class User {
     );
   }
 
-  setSalary(userID, salary, callback) {
+  setSalary(userID, income, callback) {
     this.db.run(
-      'UPDATE users SET salary = ? WHERE userID = ?',
-      [salary, userID],
+      'UPDATE users SET income = ? WHERE userID = ?',
+      [income, userID],
       function(err) {
         if (err) {
           callback(err);

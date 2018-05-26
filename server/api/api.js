@@ -253,7 +253,7 @@ let api = {
       }
     } else if (request.method === 'PUT') {
       if (
-        typeof(body.salary) === 'undefined'
+        typeof(body.income) === 'undefined'
         || typeof(userID) !== 'number'
         || userID <= 0
       ) {
@@ -261,7 +261,7 @@ let api = {
       } else {
         let u = new User.User();
         u.useDB(db);
-        u.setSalary(userID, body.salary, (res) => {
+        u.setSalary(userID, body.income, (res) => {
           callback(res);
         });
       }
