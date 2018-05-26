@@ -80,7 +80,7 @@ public class User {
 
     private void fetchTransactionsForUser(Context context) {
         try {
-            JSONObject response = RESTHelper.GET("/transaction/byUserID/" + this.userID, this.apiKey, context);
+            JSONObject response = RESTHelper.GET("/expense/byUserID/" + this.userID, this.apiKey, context);
             JSONArray t = response.getJSONArray("data");
             if (t.length() > 0) {
                 for (int i = 0; i < t.length(); i++) {
