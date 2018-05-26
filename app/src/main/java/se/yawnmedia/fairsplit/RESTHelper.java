@@ -137,7 +137,7 @@ public final class RESTHelper {
         return errorMessage;
     }
 
-    private static String populateOtherData(FairSplit app, User user, Context context) throws IOException, JSONException {
+    public static String populateOtherData(FairSplit app, User user, Context context) throws IOException, JSONException {
         app.setCurrentUser(user);
         app.addToAllUsers(user);
         app.setAPIKey(user.apiKey);

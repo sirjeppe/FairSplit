@@ -191,8 +191,9 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                     JSONObject responseUser = response.getJSONArray("data").getJSONObject(0);
                     registeredUser = new User(responseUser, RegisterActivity.this);
 
-                    errorMessage = RESTHelper.loginUser(app, loginName, password, RegisterActivity.this);
+                    errorMessage = RESTHelper.populateOtherData(app, registeredUser, RegisterActivity.this);
                     if (errorMessage != null) {
+                        Snackbar.make(registerFormView, errorMessage, Snackbar.LENGTH_LONG).show();
                         return false;
                     }
                 }
