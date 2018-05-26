@@ -147,7 +147,7 @@ public final class RESTHelper {
         // Gather all info
         if (user.groups.size() > 0) {
             for (int i = 0; i < user.groups.size(); i++) {
-                JSONObject response = RESTHelper.GET("/group/" + user.groups.get(i), user.apiKey, context);
+                JSONObject response = RESTHelper.GET(groupEndpoint + "/" + user.groups.get(i), user.apiKey, context);
                 if (response.has("errorCode") && (int) response.get("errorCode") != 0) {
                     errorMessage = response.get("message").toString();
                     return errorMessage;
