@@ -20,7 +20,7 @@ import javax.net.ssl.HttpsURLConnection;
 
 public final class RESTHelper {
     public static String baseURL = Settings.BaseURL + "/api";
-    public static String expenseEndpoint = "/transaction";
+    public static String expenseEndpoint = "/expense";
     public static String groupEndpoint = "/group";
     public static String userEndpoint = "/user";
 
