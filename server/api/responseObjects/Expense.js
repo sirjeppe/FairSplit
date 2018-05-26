@@ -1,16 +1,16 @@
 let BaseResponse = require('./BaseResponse.js');
 
-class TransactionResponse extends BaseResponse {
+class ExpenseResponse extends BaseResponse {
   constructor() {
     super();
-    this.type = 'TransactionResponse';
+    this.type = 'ExpenseResponse';
   }
 }
 
-class Transaction {
+class Expense {
   constructor() {
-    this.type = 'Transaction';
-    this.transactionID = 0;
+    this.type = 'Expense';
+    this.expenseID = 0;
     this.amount = 0;
     this.title = '';
     this.comment = '';
@@ -26,10 +26,10 @@ class Transaction {
 
   save(callback) {
     let that = this;
-    if (this.transactionID > 0) {
+    if (this.expenseID > 0) {
       this.db.run(
-        'UPDATE transactions SET amount=?, title=?, comment=? WHERE transactionID=?',
-        [this.amount, this.title, this.comment, this.transactionID],
+        'UPDATE expenses SET amount=?, title=?, comment=? WHERE expenseID=?',
+        [this.amount, this.title, this.comment, this.expenseID],
         function(err) {
           if (err) {
             callback(err);
@@ -41,13 +41,13 @@ class Transaction {
     } else {
       this.datetime = Math.floor(Date.now() / 1000);
       this.db.run(
-        'INSERT INTO transactions (amount, title, comment, groupID, userID, datetime) VALUES (?, ?, ?, ?, ?, ?)',
+        'INSERT INTO expenses (amount, title, comment, groupID, userID, datetime) VALUES (?, ?, ?, ?, ?, ?)',
         [this.amount, this.title, this.comment, this.groupID, this.userID, this.datetime],
         function(err) {
           if (err) {
             callback(err.message);
           } else {
-            that.transactionID = this.lastID;
+            that.expenseID = this.lastID;
             callback(that);
           }
         }
@@ -55,16 +55,16 @@ class Transaction {
     }
   }
 
-  getByID(transactionID, callback) {
+  getByID(expenseID, callback) {
     let that = this;
     this.db.get(
-      'SELECT * FROM transactions WHERE transactionID=?',
-      [transactionID],
+      'SELECT * FROM expenses WHERE expenseID=?',
+      [expenseID],
       function(err, row) {
         if (err) {
           callback(err);
         } else {
-          that.transactionID = row.transactionID;
+          that.expenseID = row.expenseID;
           that.amount = row.amount;
           that.title = row.title;
           that.comment = row.comment;
@@ -77,10 +77,10 @@ class Transaction {
     );
   }
 
-  static deleteByID(db, transactionID, callback) {
+  static deleteByID(db, expenseID, callback) {
     db.run(
-      'DELETE FROM transactions WHERE transactionID=?',
-      [transactionID],
+      'DELETE FROM expenses WHERE expenseID=?',
+      [expenseID],
       function(err) {
         if (err) {
           callback(err);
@@ -93,25 +93,25 @@ class Transaction {
 
   static getAllByUserID(db, userID, callback) {
     db.all(
-      'SELECT * FROM transactions WHERE userID=?',
+      'SELECT * FROM expenses WHERE userID=?',
       [userID],
       function(err, rows) {
         if (err) {
           callback(err);
         } else {
-          let transactions = [];
+          let expenses = [];
           rows.forEach((row) => {
-            let t = new Transaction();
-            t.transactionID = row.transactionID;
+            let t = new Expense();
+            t.expenseID = row.expenseID;
             t.amount = row.amount;
             t.title = row.title;
             t.comment = row.comment;
             t.groupID = row.groupID;
             t.userID = row.userID;
             t.datetime = row.datetime;
-            transactions.push(t);
+            expenses.push(t);
           });
-          callback(transactions);
+          callback(expenses);
         }
       }
     );
@@ -119,6 +119,6 @@ class Transaction {
 }
 
 module.exports = {
-  'TransactionResponse': TransactionResponse,
-  'Transaction': Transaction
+  'ExpenseResponse': ExpenseResponse,
+  'Expense': Expense
 }

@@ -152,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
             public void onPageSelected(int position) {
                 switch (position) {
                     case 0:
-                        actionButton.setOnClickListener(addTransactionListener);
+                        actionButton.setOnClickListener(addExpenseListener);
                         actionButton.setVisibility(View.VISIBLE);
                         break;
 
@@ -178,13 +178,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
         viewPager.setCurrentItem(0);
-        actionButton.setOnClickListener(addTransactionListener);
+        actionButton.setOnClickListener(addExpenseListener);
         actionButton.setVisibility(View.VISIBLE);
     }
 
     public enum ModelObject {
 
-        TRANSACTIONS(R.string.tabname_expenses, R.layout.content_expenses),
+        EXPENSES(R.string.tabname_expenses, R.layout.content_expenses),
         GROUPS(R.string.tabname_groups, R.layout.content_group_manager),
         USERS(R.string.tabname_users, R.layout.content_user_selector),
         SETTINGS(R.string.tabname_settings, R.layout.content_settings);
@@ -233,16 +233,16 @@ public class MainActivity extends AppCompatActivity {
                 expenseListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        TextView transactionTitle = view.findViewById(R.id.expense_title);
-                        Expense expense = (Expense) transactionTitle.getTag();
+                        TextView expenseTitle = view.findViewById(R.id.expense_title);
+                        Expense expense = (Expense) expenseTitle.getTag();
                         showExpensePopup(expense);
                     }
                 });
                 expenseListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        TextView transactionTitle = view.findViewById(R.id.expense_title);
-                        final Expense expense = (Expense) transactionTitle.getTag();
+                        TextView expenseTitle = view.findViewById(R.id.expense_title);
+                        final Expense expense = (Expense) expenseTitle.getTag();
 
                         AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
                         alert.setTitle("Remove " + expense.title + "?");
@@ -279,7 +279,7 @@ public class MainActivity extends AppCompatActivity {
                         Group group = (Group) groupRadioButton.getTag();
                         app.setCurrentGroup(group);
                         viewPager.setCurrentItem(0);
-                        actionButton.setOnClickListener(addTransactionListener);
+                        actionButton.setOnClickListener(addExpenseListener);
                     }
                 });
 //                groupsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -322,7 +322,7 @@ public class MainActivity extends AppCompatActivity {
                         User user = (User) userRadioButton.getTag();
                         app.setSelectedUser(user);
                         viewPager.setCurrentItem(0);
-                        actionButton.setOnClickListener(addTransactionListener);
+                        actionButton.setOnClickListener(addExpenseListener);
                     }
                 });
                 for (int userID : app.getCurrentGroup().members) {
@@ -473,18 +473,18 @@ public class MainActivity extends AppCompatActivity {
         protected Expense doInBackground(Expense... expense) {
             try {
                 JSONObject expenseJSON = new JSONObject(expense[0].toString());
-                if (expense[0].transactionID == 0) {
+                if (expense[0].expenseID == 0) {
                     JSONObject expenseResponse = RESTHelper.POST(RESTHelper.expenseEndpoint, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
                     JSONObject newExpense = expenseResponse.getJSONArray("data").getJSONObject(0);
                     return new Expense(newExpense);
                 } else if (expense[0].deleteMe) {
-                    JSONObject expenseResponse = RESTHelper.DELETE(RESTHelper.expenseEndpoint + "/" + expense[0].transactionID, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
+                    JSONObject expenseResponse = RESTHelper.DELETE(RESTHelper.expenseEndpoint + "/" + expense[0].expenseID, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
                     if (expenseResponse.getInt("errorCode") > 0) {
                         return null;
                     }
                     return expense[0];
                 } else {
-                    JSONObject expenseResponse = RESTHelper.PUT(RESTHelper.expenseEndpoint + "/" + expense[0].transactionID, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
+                    JSONObject expenseResponse = RESTHelper.PUT(RESTHelper.expenseEndpoint + "/" + expense[0].expenseID, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
                     if (expenseResponse.getInt("errorCode") > 0) {
                         return null;
                     }
@@ -500,7 +500,7 @@ public class MainActivity extends AppCompatActivity {
             if (expense != null) {
                 updateExpense(expense);
             } else {
-                Snackbar.make(findViewById(R.id.logo), R.string.transaction_modification_failed, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(findViewById(R.id.logo), R.string.expense_modification_failed, Snackbar.LENGTH_LONG).show();
             }
         }
     }
@@ -569,7 +569,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // Action button listeners
-    private View.OnClickListener addTransactionListener = new View.OnClickListener() {
+    private View.OnClickListener addExpenseListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
             showExpensePopup(null);

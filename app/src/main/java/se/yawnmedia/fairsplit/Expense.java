@@ -5,7 +5,7 @@ import android.util.Log;
 import org.json.JSONObject;
 
 public class Expense {
-    public long transactionID;
+    public long expenseID;
     public long groupID;
     public long userID;
     public double amount;
@@ -18,7 +18,7 @@ public class Expense {
 
     public Expense(JSONObject transaction) {
         try {
-            this.transactionID = transaction.getLong("transactionID");
+            this.expenseID = transaction.getLong("expenseID");
             this.groupID = transaction.getLong("groupID");
             this.userID = transaction.getLong("userID");
             this.amount = transaction.getDouble("amount");
@@ -34,7 +34,7 @@ public class Expense {
     public String toString() {
         JSONObject user = new JSONObject();
         try {
-            user.put("transactionID", this.transactionID);
+            user.put("expenseID", this.expenseID);
             user.put("groupID", this.groupID);
             user.put("userID", this.userID);
             user.put("amount", this.amount);

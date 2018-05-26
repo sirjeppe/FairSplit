@@ -11,8 +11,8 @@ let setupDB = function() {
   db.run('CREATE TABLE IF NOT EXISTS users (userID INTEGER PRIMARY KEY AUTOINCREMENT, userName TEXT UNIQUE, password TEXT, income INTEGER DEFAULT 0, groups TEXT, apiKey TEXT, keyValidTo INTEGER DEFAULT 0)');
   console.log('Creating groups table...');
   db.run('CREATE TABLE IF NOT EXISTS groups (groupID INTEGER PRIMARY KEY AUTOINCREMENT, groupName TEXT, members TEXT)');
-  console.log('Creating transactions table...');
-  db.run('CREATE TABLE IF NOT EXISTS transactions (transactionID INTEGER PRIMARY KEY AUTOINCREMENT, groupID INTEGER NOT NULL, userID INTEGER NOT NULL, amount REAL NOT NULL, title TEXT, comment TEXT, datetime INTEGER NOT NULL)');
+  console.log('Creating expenses table...');
+  db.run('CREATE TABLE IF NOT EXISTS expenses (expenseID INTEGER PRIMARY KEY AUTOINCREMENT, groupID INTEGER NOT NULL, userID INTEGER NOT NULL, amount REAL NOT NULL, title TEXT, comment TEXT, datetime INTEGER NOT NULL)');
   db.close();
   console.log('Setting up database done!');
 }

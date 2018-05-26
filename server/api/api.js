@@ -5,7 +5,7 @@ let responses = [
   './responseObjects/Error.js',
   './responseObjects/User.js',
   './responseObjects/Group.js',
-  './responseObjects/Transaction.js'
+  './responseObjects/Expense.js'
 ];
 for (let i = 0; i < responses.length; i++) {
   delete require.cache[require.resolve(responses[i])];
@@ -14,7 +14,7 @@ let BaseResponse = require(responses[0]);
 let Error = require(responses[1]);
 let User = require(responses[2]);
 let Group = require(responses[3]);
-let Transaction = require(responses[4]);
+let Expense = require(responses[4]);
 
 let api = {
   respond: function(request, response, data) {
@@ -148,15 +148,15 @@ let api = {
                 api.respond(request, response, res);
               }
             });
-          } else if (handler === 'transaction') {
-            api.transaction(db, request, response, body, (res) => {
+          } else if (handler === 'expense') {
+            api.expense(db, request, response, body, (res) => {
               if (res instanceof Array) {
-                let r = new Transaction.TransactionResponse();
+                let r = new Expense.ExpenseResponse();
                 r.requestUri = request.url;
                 r.data = res;
                 api.respond(request, response, r);
-              } else if (res instanceof Transaction.Transaction) {
-                let r = new Transaction.TransactionResponse();
+              } else if (res instanceof Expense.Expense) {
+                let r = new Expense.ExpenseResponse();
                 r.requestUri = request.url;
                 r.data.push(res);
                 api.respond(request, response, r);
@@ -284,9 +284,9 @@ let api = {
     }
   },
 
-  _verifyTransactionBody: function(body) {
+  _verifyExpenseBody: function(body) {
     if (
-      typeof(body.transactionID) === 'undefined'
+      typeof(body.expenseID) === 'undefined'
       || typeof(body.amount) === 'undefined'
       || typeof(body.title) === 'undefined'
       || typeof(body.comment) === 'undefined'
@@ -299,12 +299,12 @@ let api = {
     return true;
   },
 
-  transaction: function(db, request, response, body, callback) {
+  expense: function(db, request, response, body, callback) {
     if (request.method === 'POST') {
-      if (!api._verifyTransactionBody(body)) {
+      if (!api._verifyExpenseBody(body)) {
         callback(Error.ErrorCodes.MALFORMED_REQUEST);
       } else {
-        let t = new Transaction.Transaction();
+        let t = new Expense.Expense();
         t.useDB(db);
         t.amount = body.amount;
         t.title = body.title;
@@ -320,7 +320,7 @@ let api = {
       if (pathArray.indexOf('byUserID') > -1) {
         let userID = parseInt(pathArray[pathArray.length - 1]);
         if (userID > 0) {
-          Transaction.Transaction.getAllByUserID(db, userID, (res) => {
+          Expense.Expense.getAllByUserID(db, userID, (res) => {
             callback(res);
           });
         } else {
@@ -328,12 +328,12 @@ let api = {
         }
       }
     } else if (request.method === 'PUT') {
-      if (!api._verifyTransactionBody(body)) {
+      if (!api._verifyExpenseBody(body)) {
         callback(Error.ErrorCodes.MALFORMED_REQUEST);
       } else {
-        let t = new Transaction.Transaction();
+        let t = new Expense.Expense();
         t.useDB(db);
-        t.transactionID = body.transactionID;
+        t.expenseID = body.expenseID;
         t.amount = body.amount;
         t.title = body.title;
         t.comment = body.comment;
@@ -347,7 +347,7 @@ let api = {
       let pathArray = request.url.split('/');
       let userID = parseInt(pathArray[pathArray.length - 1]);
       if (userID > 0) {
-        Transaction.Transaction.deleteByID(db, userID, (res) => {
+        Expense.Expense.deleteByID(db, userID, (res) => {
           callback(res);
         });
       } else {
