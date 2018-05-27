@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public class FairSplit extends Application {
@@ -72,6 +73,15 @@ public class FairSplit extends Application {
         if (!allGroups.contains(group)) {
             allGroups.add(group);
         }
+    }
+    public ArrayList<Group> getGroupsOwnedByUserID(int userID) {
+        ArrayList<Group> groups = new ArrayList<>();
+        for (Group group : allGroups) {
+            if (group.owner == userID) {
+                groups.add(group);
+            }
+        }
+        return groups;
     }
 
     public boolean userInList(int userID) {

@@ -261,7 +261,9 @@ let api = {
       } else {
         let u = new User.User();
         u.useDB(db);
-        u.setSalary(userID, body.income, (res) => {
+        u.userID = userID;
+        u.apiKey = request.headers['fairsplit-apikey'];
+        u.setSalary(body.income, (res) => {
           callback(res);
         });
       }
@@ -269,17 +271,54 @@ let api = {
   },
 
   group: function(db, request, response, body, callback) {
+    let pathArray = request.url.split('/');
+    let groupID = parseInt(pathArray[pathArray.length - 1]);
     if (request.method === 'GET') {
-      let pathArray = request.url.split('/');
-      let groupID = parseInt(pathArray[pathArray.length - 1]);
-      if (groupID > 0) {
+      if (
+        typeof(groupID) !== 'number'
+        || groupID <= 0
+      ) {
+        callback(Error.ErrorCodes.MALFORMED_REQUEST);
+      } else {
+        if () {
         let g = new Group.Group();
         g.useDB(db);
         g.getByID(groupID, (res) => {
           callback(res);
         });
-      } else {
+      }
+    } else if (request.method === 'PUT') {
+      if (
+        typeof(body.groupName) === 'undefined'
+        || typeof(groupID) !== 'number'
+        || groupID <= 0
+      ) {
         callback(Error.ErrorCodes.MALFORMED_REQUEST);
+      } else {
+        let g = new Group.Group();
+        g.useDB(db);
+        // groupID and owner are needed for validation
+        g.groupID = groupID;
+        g.owner = body.owner;
+        // groupName and members can be updated
+        g.groupName = body.groupName;
+        g.members = body.members;
+        // Finally save, and verify against used apiKey
+        g.save(request.headers['fairsplit-apikey'], (res) => {
+          callback(res);
+        });
+      }
+    } else if (request.method === 'DELETE') {
+      if (
+        typeof(body.groupName) === 'undefined'
+        || typeof(groupID) !== 'number'
+        || groupID <= 0
+      ) {
+        callback(Error.ErrorCodes.MALFORMED_REQUEST);
+      } else {
+        Group.Group.deleteByID(db, groupID, (res) => {
+          callback(res);
+        });
       }
     }
   },
@@ -300,6 +339,8 @@ let api = {
   },
 
   expense: function(db, request, response, body, callback) {
+    let pathArray = request.url.split('/');
+    let userID = parseInt(pathArray[pathArray.length - 1]);
     if (request.method === 'POST') {
       if (!api._verifyExpenseBody(body)) {
         callback(Error.ErrorCodes.MALFORMED_REQUEST);
@@ -316,7 +357,6 @@ let api = {
         });
       }
     } else if (request.method === 'GET') {
-      let pathArray = request.url.split('/');
       if (pathArray.indexOf('byUserID') > -1) {
         let userID = parseInt(pathArray[pathArray.length - 1]);
         if (userID > 0) {
@@ -344,14 +384,15 @@ let api = {
         });
       }
     } else if (request.method === 'DELETE') {
-      let pathArray = request.url.split('/');
-      let userID = parseInt(pathArray[pathArray.length - 1]);
-      if (userID > 0) {
+      if (
+        typeof(userID) !== 'number'
+        || userID <= 0
+      ) {
+        callback(Error.ErrorCodes.MALFORMED_REQUEST);
+      } else {
         Expense.Expense.deleteByID(db, userID, (res) => {
           callback(res);
         });
-      } else {
-        callback(Error.ErrorCodes.MALFORMED_REQUEST);
       }
     }
   }

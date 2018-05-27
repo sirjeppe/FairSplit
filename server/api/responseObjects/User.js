@@ -32,12 +32,35 @@ class User {
     return apiKey;
   }
 
+  _validateAPIKeyAgainstUserID(callback) {
+    this.db.get(
+      'SELECT userID FROM users WHERE apiKey = ?',
+      [this.apiKey],
+      function(err, row) {
+        if (err) {
+          callback(false);
+        } else {
+          if (row != null) {
+            if (row.userID === this.userID) {
+              callback(true);
+            } else {
+              callback(false);
+            }
+          } else {
+            callback(false);
+          }
+        }
+      }
+    );
+  }
+
   useDB(db) {
     this.db = db;
   }
 
   login(userName, password, callback) {
     let that = this;
+    userName = trim(userName);
     this.db.get('SELECT * FROM users WHERE userName=?', [userName], function(err, row) {
       if (err) {
         callback(err);
@@ -77,6 +100,7 @@ class User {
 
   register(userName, password, callback) {
     let that = this;
+    userName = trim(userName);
     let hash = crypto.createHash('sha256');
     hash.update(password);
     let apiKey = this._generateAPIKey();
@@ -145,18 +169,24 @@ class User {
     );
   }
 
-  setSalary(userID, income, callback) {
-    this.db.run(
-      'UPDATE users SET income = ? WHERE userID = ?',
-      [income, userID],
-      function(err) {
-        if (err) {
-          callback(err);
-        } else {
-          callback(true);
-        }
+  setSalary(income, callback) {
+    _validateAPIKeyAgainstUserID((valid) => {
+      if (valid) {
+        this.db.run(
+          'UPDATE users SET income = ? WHERE userID = ?',
+          [income, userID],
+          function(err) {
+            if (err) {
+              callback(err);
+            } else {
+              callback(true);
+            }
+          }
+        );
+      } else {
+        callback(false);
       }
-    );
+    }
   }
 }
 

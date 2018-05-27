@@ -14,6 +14,29 @@ class Group {
     this.groupName = '';
     this.owner = 0;
     this.members = [];
+    this.db = null;
+  }
+
+  _validateAPIKeyAgainstOwner(apiKey, callback) {
+    this.db.get(
+      'SELECT userID FROM users WHERE apiKey = ?',
+      [apiKey],
+      function(err, row) {
+        if (err) {
+          callback(false);
+        } else {
+          if (row != null) {
+            if (row.userID === this.owner) {
+              callback(true);
+            } else {
+              callback(false);
+            }
+          } else {
+            callback(false);
+          }
+        }
+      }
+    );
   }
 
   useDB(db) {
@@ -37,6 +60,26 @@ class Group {
         }
       }
     );
+  }
+
+  save(apiKey, callback) {
+    _validateAPIKeyAgainstOwner(apiKey, (valid) => {
+      if (valid) {
+        this.db.run(
+          'UPDATE groups SET groupName = ?, members = ? WHERE groupID = ?'
+          [trim(this.groupName), this.members.join(','), this.groupID],
+          function(err) {
+            if (err) {
+              callback(false);
+            } else {
+              callback(true);
+            }
+          }
+        )
+      } else {
+        callback(false);
+      }
+    });
   }
 }
 

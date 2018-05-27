@@ -52,8 +52,8 @@ public class PopupGroup {
             }
         });
 
-        // Delete button, only show for existing groups
-        if (group != null) {
+        // Delete button, only show for existing groups and as long as it's not the last group
+        if (group != null && app.getGroupsOwnedByUserID(app.getCurrentUser().userID).size() > 1) {
             alert.setNeutralButton("Delete", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
