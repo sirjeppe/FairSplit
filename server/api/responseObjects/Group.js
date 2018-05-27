@@ -12,6 +12,7 @@ class Group {
     this.type = 'Group';
     this.groupID = 0;
     this.groupName = '';
+    this.owner = 0;
     this.members = [];
   }
 
@@ -30,6 +31,7 @@ class Group {
         } else {
           that.groupID = row.groupID;
           that.groupName = row.groupName;
+          that.owner = row.owner;
           that.members = (row.members) ? row.members.split(',').map((n) => { return parseInt(n); }) : [];
           callback(that);
         }

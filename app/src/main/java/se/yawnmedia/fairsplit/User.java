@@ -38,6 +38,11 @@ public class User {
 
     @Override
     public String toString() {
+        JSONObject user = this.toJSONObject();
+        return user.toString();
+    }
+
+    public JSONObject toJSONObject() {
         JSONObject user = new JSONObject();
         try {
             user.put("userID", this.userID);
@@ -47,18 +52,9 @@ public class User {
             user.put("apiKey", this.apiKey);
             user.put("keyValidTo", this.keyValidTo);
         } catch (Exception ex) {
-            Log.e("User.toString()", ex.getMessage());
-        }
-        return user.toString();
-    }
-
-    public JSONObject toJSONObject() {
-        try {
-            return new JSONObject(this.toString());
-        } catch (Exception ex) {
             Log.e("User.toJSONObject()", ex.getMessage());
         }
-        return null;
+        return user;
     }
 
     public static User findUserByID(int userID, ArrayList<User> users) {

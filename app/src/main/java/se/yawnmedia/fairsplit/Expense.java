@@ -32,6 +32,11 @@ public class Expense {
 
     @Override
     public String toString() {
+        JSONObject user = this.toJSONObject();
+        return user.toString();
+    }
+
+    public JSONObject toJSONObject() {
         JSONObject user = new JSONObject();
         try {
             user.put("expenseID", this.expenseID);
@@ -42,8 +47,8 @@ public class Expense {
             user.put("comment", this.comment);
             user.put("datetime", this.datetime);
         } catch (Exception ex) {
-            Log.e("Expense.toString()", ex.getMessage());
+            Log.e("Expense.toJSONObject()", ex.getMessage());
         }
-        return user.toString();
+        return user;
     }
 }

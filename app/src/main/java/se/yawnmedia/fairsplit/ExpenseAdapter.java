@@ -51,7 +51,7 @@ public class ExpenseAdapter extends ArrayAdapter<Expense> {
         String dateTime = sdf.format(new Date(ms));
 
         viewHolder.title.setText(expense.title);
-        viewHolder.amount.setText("" + expense.amount);
+        viewHolder.amount.setText(String.format("%.2f", expense.amount));
         viewHolder.comment.setText(expense.comment);
         viewHolder.datetime.setText(dateTime);
 

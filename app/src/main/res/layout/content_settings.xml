@@ -1,29 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#ddd"
     android:padding="5dp">
 
+    <TextView
+        android:id="@+id/settings_general_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:text="@string/settings_general_header"
+        android:textAlignment="center"
+        android:textColor="@color/text_color"/>
+
     <RelativeLayout
         android:id="@+id/setting_income"
         xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#fff"
+        android:layout_below="@+id/settings_general_header"
+        android:background="@drawable/item_background"
+        android:clickable="true"
         android:paddingBottom="10dp"
         android:paddingEnd="10dp"
         android:paddingStart="10dp"
         android:paddingTop="5dp"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:context="se.yawnmedia.fairsplit.MainActivity">
 
         <TextView
@@ -55,4 +61,84 @@
 
     </RelativeLayout>
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:id="@+id/settings_account_header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="15dp"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/setting_income"
+        android:text="@string/settings_account_header"
+        android:textAlignment="center"
+        android:textColor="@color/text_color"/>
+
+    <RelativeLayout
+        android:id="@+id/setting_logout"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/settings_account_header"
+        android:layout_marginBottom="5dp"
+        android:background="@drawable/item_background"
+        android:clickable="true"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        tools:context="se.yawnmedia.fairsplit.MainActivity">
+
+        <TextView
+            android:id="@+id/setting_logout_title"
+            android:layout_width="228dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
+            android:text="@string/setting_logout_name"
+            android:textSize="22sp"/>
+
+        <TextView
+            android:id="@+id/setting_logout_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/setting_logout_title"
+            android:text="@string/setting_logout_comment"
+            android:textColor="#ffaaaaaa"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/setting_delete_account"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/setting_logout"
+        android:background="@drawable/item_background"
+        android:clickable="true"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        tools:context="se.yawnmedia.fairsplit.MainActivity">
+
+        <TextView
+            android:id="@+id/setting_delete_account_title"
+            android:layout_width="228dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
+            android:text="@string/setting_delete_account_name"
+            android:textSize="22sp"/>
+
+        <TextView
+            android:id="@+id/setting_delete_account_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/setting_delete_account_title"
+            android:text="@string/setting_delete_account_comment"
+            android:textColor="#ffaaaaaa"/>
+
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -10,12 +10,16 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -30,7 +34,7 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity {
 
     private FairSplit app;
-    private ExpenseAdapter expenseAdapter;
+    public ExpenseAdapter expenseAdapter;
     private TextView expensesTitle;
     private TextView groupsTitle;
     private TextView usersTitle;
@@ -64,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
         settingsTitle = findViewById(R.id.settings_title);
         app = ((FairSplit) this.getApplication());
         app.setupAppPrefs(this);
+        app.setMainActivityContext(this);
         viewPager = findViewById(R.id.vp);
 
         // Make top menu clickable
@@ -227,6 +232,8 @@ public class MainActivity extends AppCompatActivity {
                 // Show who's selected and total expenses
                 updateSelectedUser();
 
+                final PopupExpense pe = new PopupExpense(app);
+
                 expenseAdapter = new ExpenseAdapter(MainActivity.this, R.layout.expense_item);
                 ListView expenseListView = findViewById(R.id.expenses_list_view);
                 expenseListView.setAdapter(expenseAdapter);
@@ -235,7 +242,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         TextView expenseTitle = view.findViewById(R.id.expense_title);
                         Expense expense = (Expense) expenseTitle.getTag();
-                        showExpensePopup(expense);
+                        pe.showExpensePopup(expense);
                     }
                 });
                 expenseListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
@@ -248,8 +255,8 @@ public class MainActivity extends AppCompatActivity {
                         alert.setTitle("Remove " + expense.title + "?");
                         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int whichButton) {
-                                expense.deleteMe = true;
-                                new PostExpenseTask().execute(expense);
+                            expense.deleteMe = true;
+                            pe.postExpenseTask.execute(expense);
                             }
                         });
                         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -318,11 +325,11 @@ public class MainActivity extends AppCompatActivity {
                 usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        RadioButton userRadioButton = view.findViewById(R.id.userRadioButton);
-                        User user = (User) userRadioButton.getTag();
-                        app.setSelectedUser(user);
-                        viewPager.setCurrentItem(0);
-                        actionButton.setOnClickListener(addExpenseListener);
+                    RadioButton userRadioButton = view.findViewById(R.id.userRadioButton);
+                    User user = (User) userRadioButton.getTag();
+                    app.setSelectedUser(user);
+                    viewPager.setCurrentItem(0);
+                    actionButton.setOnClickListener(addExpenseListener);
                     }
                 });
                 for (int userID : app.getCurrentGroup().members) {
@@ -340,7 +347,8 @@ public class MainActivity extends AppCompatActivity {
                 settingIncome.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        showIncomePopup();
+                    PopupIncome pi = new PopupIncome(app);
+                    pi.showIncomePopup();
                     }
                 });
             }
@@ -372,25 +380,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private void updateExpense(Expense newExpense) {
-        // Safety net
-        if (app.getSelectedUser() == app.getCurrentUser()) {
-            if (!app.getCurrentUser().expenses.contains(newExpense)) {
-                app.getCurrentUser().expenses.add(newExpense);
-            }
-            if (expenseAdapter.getPosition(newExpense) < 0) {
-                expenseAdapter.insert(newExpense, 0);
-            }
-            if (newExpense.deleteMe) {
-                expenseAdapter.remove(newExpense);
-                app.getCurrentUser().expenses.remove(newExpense);
-            }
-            updateSelectedUser();
-            expenseAdapter.notifyDataSetChanged();
-        }
-    }
-
-    private void updateSelectedUser() {
+    public void updateSelectedUser() {
         TextView selectedUserName = findViewById(R.id.selected_user_name);
         TextView selectedUserExpensesTotal = findViewById(R.id.selected_user_expenses_total);
         selectedUserName.setText(app.getSelectedUser().userName);
@@ -412,167 +402,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void showExpensePopup(final Expense expense) {
-        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-        if (expense != null) {
-            alert.setTitle("Edit expense");
-        } else {
-            alert.setTitle("Add expense");
-        }
-        LayoutInflater inflater = MainActivity.this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.add_expense_popup, null);
-        if (expense != null) {
-            EditText popupAmount = dialogView.findViewById(R.id.popupAmount);
-            popupAmount.setText(String.format(Locale.US, "%.2f", expense.amount));
-            popupAmount.setSelection(popupAmount.getText().length());
-            ((EditText) dialogView.findViewById(R.id.popupTitle)).setText(expense.title);
-            ((EditText) dialogView.findViewById(R.id.popupComment)).setText(expense.comment);
-        }
-        alert.setView(dialogView);
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                EditText amount = dialogView.findViewById(R.id.popupAmount);
-                EditText title = dialogView.findViewById(R.id.popupTitle);
-                EditText comment = dialogView.findViewById(R.id.popupComment);
-
-                Expense toPost;
-                if (expense == null) {
-                    Expense newExpense = new Expense();
-                    newExpense.title = title.getText().toString();
-                    newExpense.amount = Double.parseDouble(amount.getText().toString());
-                    newExpense.comment = comment.getText().toString();
-                    newExpense.datetime = (int) (System.currentTimeMillis() / 1000);
-                    toPost = newExpense;
-                } else {
-                    expense.title = title.getText().toString();
-                    expense.amount = Double.parseDouble(amount.getText().toString());
-                    expense.comment = comment.getText().toString();
-                    toPost = expense;
-                }
-
-                try {
-                    toPost.userID = app.getCurrentUser().userID;
-                    toPost.groupID = app.getCurrentGroup().groupID;
-                    new PostExpenseTask().execute(toPost);
-                } catch (Exception ex) {
-                    Log.e("updateExpense", ex.getMessage());
-                }
-            }
-        });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                //Put actions for CANCEL button here, or leave in blank
-            }
-        });
-        AlertDialog alertDialog = alert.create();
-        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        alertDialog.show();
-    }
-
-    private class PostExpenseTask extends AsyncTask<Expense, Void, Expense> {
-        protected Expense doInBackground(Expense... expense) {
-            try {
-                JSONObject expenseJSON = new JSONObject(expense[0].toString());
-                if (expense[0].expenseID == 0) {
-                    JSONObject expenseResponse = RESTHelper.POST(RESTHelper.expenseEndpoint, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
-                    JSONObject newExpense = expenseResponse.getJSONArray("data").getJSONObject(0);
-                    return new Expense(newExpense);
-                } else if (expense[0].deleteMe) {
-                    JSONObject expenseResponse = RESTHelper.DELETE(RESTHelper.expenseEndpoint + "/" + expense[0].expenseID, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
-                    if (expenseResponse.getInt("errorCode") > 0) {
-                        return null;
-                    }
-                    return expense[0];
-                } else {
-                    JSONObject expenseResponse = RESTHelper.PUT(RESTHelper.expenseEndpoint + "/" + expense[0].expenseID, expenseJSON, app.getCurrentUser().apiKey, MainActivity.this);
-                    if (expenseResponse.getInt("errorCode") > 0) {
-                        return null;
-                    }
-                    return expense[0];
-                }
-            } catch (Exception ex) {
-                Log.e("PostExpenseTask", ex.getMessage());
-            }
-            return null;
-        }
-
-        protected void onPostExecute(Expense expense) {
-            if (expense != null) {
-                updateExpense(expense);
-            } else {
-                Snackbar.make(findViewById(R.id.logo), R.string.expense_modification_failed, Snackbar.LENGTH_LONG).show();
-            }
-        }
-    }
-
-    private void showIncomePopup() {
-        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-        LayoutInflater inflater = MainActivity.this.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.set_income_popup, null);
-
-        EditText incomeEdit = dialogView.findViewById(R.id.income);
-        incomeEdit.setText(String.format(Locale.US, "%d", app.getCurrentUser().income));
-        incomeEdit.setSelection(incomeEdit.getText().length());
-
-        alert.setView(dialogView);
-        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                EditText incomeEdit = dialogView.findViewById(R.id.income);
-                int income = Integer.parseInt(incomeEdit.getText().toString());
-                app.getCurrentUser().income = income;
-                try {
-                    new PostUserTask().execute(app.getCurrentUser());
-                } catch (Exception ex) {
-                    Log.e("updateIncome", ex.getMessage());
-                }
-            }
-        });
-        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int whichButton) {
-                //Put actions for CANCEL button here, or leave in blank
-            }
-        });
-        AlertDialog alertDialog = alert.create();
-        alertDialog.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        alertDialog.show();
-    }
-
-    private class PostUserTask extends AsyncTask<User, Void, Boolean> {
-        protected Boolean doInBackground(User... user) {
-            try {
-                User toPost = user[0];
-                JSONObject userResponse = RESTHelper.PUT(
-                    RESTHelper.userEndpoint + "/" + app.getCurrentUser().userID,
-                    toPost.toJSONObject(),
-                    app.getCurrentUser().apiKey,
-                    MainActivity.this
-                );
-                if (userResponse.getInt("errorCode") > 0) {
-                    return false;
-                }
-                return true;
-            } catch (Exception ex) {
-                Log.e("PostUserTask", ex.getMessage());
-            }
-            return false;
-        }
-
-        protected void onPostExecute(Boolean success) {
-            TextView incomeTextView = findViewById(R.id.setting_income_amount);
-            if (success) {
-                incomeTextView.setText(String.format(Locale.US, "%d", app.getCurrentUser().income));
-                Snackbar.make(incomeTextView, R.string.settings_saved, Snackbar.LENGTH_LONG).show();
-            } else {
-                Snackbar.make(incomeTextView, R.string.settings_save_failed, Snackbar.LENGTH_LONG).show();
-            }
-        }
-    }
-
     // Action button listeners
     private View.OnClickListener addExpenseListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
-            showExpensePopup(null);
+            PopupExpense pe = new PopupExpense(app);
+            pe.showExpensePopup(null);
         }
     };
 
@@ -586,7 +421,8 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener inviteUserListener = new View.OnClickListener() {
         @Override
         public void onClick(final View view) {
-            //showInviteUserAlert(null);
+            PopupInviteUser piu = new PopupInviteUser(app);
+            piu.showInviteUserPopup();
         }
     };
 }

@@ -11,12 +11,14 @@ public class Group {
     public int groupID;
     public String groupName;
     public ArrayList<Integer> members = new ArrayList<>();
+    public int owner;
     public boolean deleteMe = false;
 
     public Group(JSONObject group) {
         try {
             this.groupID = group.getInt("groupID");
             this.groupName = group.getString("groupName");
+            this.owner = group.getInt("owner");
             JSONArray members = group.getJSONArray("members");
             if (members.length() > 0) {
                 for (int m = 0; m < members.length(); m++) {
@@ -30,14 +32,20 @@ public class Group {
 
     @Override
     public String toString() {
+        JSONObject group = this.toJSONObject();
+        return group.toString();
+    }
+
+    public JSONObject toJSONObject() {
         JSONObject group = new JSONObject();
         try {
             group.put("groupID", this.groupID);
             group.put("groupName", this.groupName);
+            group.put("owner", this.owner);
             group.put("members", new JSONArray(this.members));
         } catch (Exception ex) {
-            Log.e("Group.toString()", ex.getMessage());
+            Log.e("Group.toJSONObject()", ex.getMessage());
         }
-        return group.toString();
+        return group;
     }
 }

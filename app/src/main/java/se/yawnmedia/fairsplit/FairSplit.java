@@ -13,6 +13,7 @@ public class FairSplit extends Application {
     private ArrayList<User> allUsers = new ArrayList<>();
     private ArrayList<Group> allGroups = new ArrayList<>();
     private SharedPreferences prefs;
+    private MainActivity mainActivityContext;
 
     public void setupAppPrefs(Context context) {
         prefs = context.getSharedPreferences("se.yawnmedia.fairsplit.app", Context.MODE_PRIVATE);
@@ -106,4 +107,9 @@ public class FairSplit extends Application {
         editor.commit();
     }
     public String getLoginName() { return prefs.getString("loginName", ""); }
+
+    public void setMainActivityContext(MainActivity mainActivityContext) {
+        this.mainActivityContext = mainActivityContext;
+    }
+    public MainActivity getMainActivityContext() { return mainActivityContext; }
 }

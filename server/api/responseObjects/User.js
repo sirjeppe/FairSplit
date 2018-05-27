@@ -94,8 +94,8 @@ class User {
           that.apiKey = apiKey;
           that.keyValidTo = expires;
           that.db.run(
-            'INSERT INTO groups (groupName, members) VALUES (?, ?)',
-            ['My first group', that.userID],
+            'INSERT INTO groups (groupName, owner, members) VALUES (?, ?, ?)',
+            ['My first group', that.userID, that.userID],
             function(err) {
               if (err) {
                 callback(err);
