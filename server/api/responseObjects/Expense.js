@@ -80,7 +80,7 @@ class Expense {
       } else {
         callback(false);
       }
-    }
+    });
   }
 
   getByID(expenseID, callback) {
