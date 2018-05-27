@@ -21,6 +21,7 @@ class Expense {
   }
 
   _validateAPIKeyAgainstOwner(apiKey, callback) {
+    let that = this;
     this.db.get(
       'SELECT userID FROM users WHERE apiKey = ?',
       [apiKey],
@@ -29,7 +30,7 @@ class Expense {
           callback(false);
         } else {
           if (row != null) {
-            if (row.userID === this.userID) {
+            if (row.userID === that.userID) {
               callback(true);
             } else {
               callback(false);

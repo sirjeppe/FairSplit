@@ -35,9 +35,9 @@ let api = {
     } else if (typeof(data) === 'boolean') {
       data = new BaseResponse();
       data.requestUri = request.url;
-      data.errorCode = (data) ? 0 : Error.ErrorCodes.COMMAND_FAILED;
-      data.message = (data) ? 'Command successful' : Error.ErrorMessages[data.errorCode];
-      code = (data) ? code : 400;
+      data.errorCode = (temp) ? 0 : Error.ErrorCodes.COMMAND_FAILED;
+      data.message = (temp) ? 'Command successful' : Error.ErrorMessages[data.errorCode];
+      code = (temp) ? code : 400;
     } else if (data instanceof BaseResponse) {
       // Strip out db property from data objects if there are any before sending
       // back the response

@@ -33,6 +33,7 @@ class User {
   }
 
   _validateAPIKeyAgainstUserID(callback) {
+    let that = this;
     this.db.get(
       'SELECT userID FROM users WHERE apiKey = ?',
       [this.apiKey],
@@ -41,7 +42,7 @@ class User {
           callback(false);
         } else {
           if (row != null) {
-            if (row.userID === this.userID) {
+            if (row.userID === that.userID) {
               callback(true);
             } else {
               callback(false);

@@ -18,6 +18,7 @@ class Group {
   }
 
   _validateAPIKeyAgainstOwner(apiKey, callback) {
+    let that = this;
     this.db.get(
       'SELECT userID FROM users WHERE apiKey = ?',
       [apiKey],
@@ -26,7 +27,7 @@ class Group {
           callback(false);
         } else {
           if (row != null) {
-            if (row.userID === this.owner) {
+            if (row.userID === that.owner) {
               callback(true);
             } else {
               callback(false);
