@@ -14,6 +14,8 @@ public class Group {
     public int owner;
     public boolean deleteMe = false;
 
+    public Group() {}
+
     public Group(JSONObject group) {
         try {
             this.groupID = group.getInt("groupID");

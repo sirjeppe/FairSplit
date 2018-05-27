@@ -35,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
     private FairSplit app;
     public ExpenseAdapter expenseAdapter;
+    public GroupsAdapter groupsAdapter;
     private TextView expensesTitle;
     private TextView groupsTitle;
     private TextView usersTitle;
@@ -249,21 +250,8 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                         TextView expenseTitle = view.findViewById(R.id.expense_title);
-                        final Expense expense = (Expense) expenseTitle.getTag();
-
-                        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-                        alert.setTitle("Remove " + expense.title + "?");
-                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                            expense.deleteMe = true;
-                            pe.postExpenseTask.execute(expense);
-                            }
-                        });
-                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                            }
-                        });
-                        alert.show();
+                        Expense expense = (Expense) expenseTitle.getTag();
+                        pe.showExpenseDeletePopup(expense);
                         return true;
                     }
                 });
@@ -276,40 +264,35 @@ public class MainActivity extends AppCompatActivity {
 
             // Groups part
             else if (position == 1) {
-                GroupsAdapter groupsAdapter = new GroupsAdapter(MainActivity.this, R.layout.group_item);
+                groupsAdapter = new GroupsAdapter(MainActivity.this, R.layout.group_item);
                 ListView groupsListView = findViewById(R.id.groups_list_view);
                 groupsListView.setAdapter(groupsAdapter);
                 groupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        RadioButton groupRadioButton = view.findViewById(R.id.groupRadioButton);
-                        Group group = (Group) groupRadioButton.getTag();
-                        app.setCurrentGroup(group);
-                        viewPager.setCurrentItem(0);
-                        actionButton.setOnClickListener(addExpenseListener);
+                    RadioButton groupRadioButton = view.findViewById(R.id.groupRadioButton);
+                    Group group = (Group) groupRadioButton.getTag();
+                    app.setCurrentGroup(group);
+                    viewPager.setCurrentItem(0);
+                    actionButton.setOnClickListener(addExpenseListener);
                     }
                 });
-//                groupsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-//                    @Override
-//                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-//                        RadioButton groupRadioButton = view.findViewById(R.id.groupRadioButton);
-//                        final Group group = (Group) groupRadioButton.getTag();
-//
-//                        AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.this);
-//                        alert.setTitle("Remove " + group.groupName + "?");
-//                        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int whichButton) {
-//                                group.deleteMe = true;
-//                                new PostGroupTask().execute(group);
-//                            }
-//                        });
-//                        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-//                            public void onClick(DialogInterface dialog, int whichButton) {}
-//                        });
-//                        alert.show();
-//                        return true;
-//                    }
-//                });
+                groupsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    @Override
+                    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                        RadioButton groupRadioButton = view.findViewById(R.id.groupRadioButton);
+                        final Group group = (Group) groupRadioButton.getTag();
+
+                        // Only allow modifications by group owner
+                        if (group.owner != app.getCurrentUser().userID) {
+                            return false;
+                        }
+
+                        PopupGroup pg = new PopupGroup(app);
+                        pg.showGroupPopup(group);
+                        return true;
+                    }
+                });
                 for (int groupID : app.getCurrentUser().groups) {
                     groupsAdapter.add(app.getGroupByID(groupID));
                 }

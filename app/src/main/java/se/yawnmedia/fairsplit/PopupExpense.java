@@ -21,7 +21,7 @@ import java.util.Locale;
 public class PopupExpense {
     private FairSplit app;
     private MainActivity mainActivity;
-    public PostExpenseTask postExpenseTask;
+    private PostExpenseTask postExpenseTask;
 
     public PopupExpense(FairSplit app) {
         this.app = app;
@@ -53,6 +53,7 @@ public class PopupExpense {
 
         alert.setView(dialogView);
 
+        // OK button
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 Expense toPost;
@@ -81,11 +82,13 @@ public class PopupExpense {
             }
         });
 
+        // Cancel button
         alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int whichButton) {
                 //Put actions for CANCEL button here, or leave in blank
             }
         });
+
         final AlertDialog alertDialog = alert.create();
 
         // Make sure OK button gets enabled when popupAmount and popupTitle aren't empty
@@ -137,22 +140,61 @@ public class PopupExpense {
         }
     }
 
-    public class PostExpenseTask extends AsyncTask<Expense, Void, Expense> {
+    public void showExpenseDeletePopup(final Expense expense) {
+        AlertDialog.Builder alert = new AlertDialog.Builder(mainActivity);
+        alert.setTitle("Remove " + expense.title + "?");
+        alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                expense.deleteMe = true;
+                postExpenseTask.execute(expense);
+            }
+        });
+        alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+            }
+        });
+        alert.show();
+    }
+
+    private class PostExpenseTask extends AsyncTask<Expense, Void, Expense> {
         protected Expense doInBackground(Expense... expense) {
             try {
-                JSONObject expenseJSON = new JSONObject(expense[0].toString());
+                JSONObject expenseJSON = expense[0].toJSONObject();
+
+                // Add new expense
                 if (expense[0].expenseID == 0) {
-                    JSONObject expenseResponse = RESTHelper.POST(RESTHelper.expenseEndpoint, expenseJSON, app.getCurrentUser().apiKey, mainActivity);
+                    JSONObject expenseResponse = RESTHelper.POST(
+                        RESTHelper.expenseEndpoint, expenseJSON,
+                        app.getCurrentUser().apiKey,
+                        mainActivity
+                    );
+                    if (expenseResponse.getInt("errorCode") > 0) {
+                        return null;
+                    }
                     JSONObject newExpense = expenseResponse.getJSONArray("data").getJSONObject(0);
                     return new Expense(newExpense);
+
+                // Delete existing expense
                 } else if (expense[0].deleteMe) {
-                    JSONObject expenseResponse = RESTHelper.DELETE(RESTHelper.expenseEndpoint + "/" + expense[0].expenseID, expenseJSON, app.getCurrentUser().apiKey, mainActivity);
+                    JSONObject expenseResponse = RESTHelper.DELETE(
+                        RESTHelper.expenseEndpoint + "/" + expense[0].expenseID,
+                        expenseJSON,
+                        app.getCurrentUser().apiKey,
+                        mainActivity
+                    );
                     if (expenseResponse.getInt("errorCode") > 0) {
                         return null;
                     }
                     return expense[0];
+
+                // Update existing expense
                 } else {
-                    JSONObject expenseResponse = RESTHelper.PUT(RESTHelper.expenseEndpoint + "/" + expense[0].expenseID, expenseJSON, app.getCurrentUser().apiKey, mainActivity);
+                    JSONObject expenseResponse = RESTHelper.PUT(
+                        RESTHelper.expenseEndpoint + "/" + expense[0].expenseID,
+                        expenseJSON,
+                        app.getCurrentUser().apiKey,
+                        mainActivity
+                    );
                     if (expenseResponse.getInt("errorCode") > 0) {
                         return null;
                     }
@@ -168,23 +210,27 @@ public class PopupExpense {
             if (expense != null) {
                 updateExpense(expense);
             } else {
-                Snackbar.make(mainActivity.findViewById(R.id.logo), R.string.expense_modification_failed, Snackbar.LENGTH_LONG).show();
+                Snackbar.make(
+                    mainActivity.findViewById(R.id.logo),
+                    R.string.expense_modification_failed,
+                    Snackbar.LENGTH_LONG
+                ).show();
             }
         }
     }
 
-    private void updateExpense(Expense newExpense) {
+    private void updateExpense(Expense expense) {
         // Safety net
         if (app.getSelectedUser() == app.getCurrentUser()) {
-            if (!app.getCurrentUser().expenses.contains(newExpense)) {
-                app.getCurrentUser().expenses.add(newExpense);
+            if (!app.getCurrentUser().expenses.contains(expense)) {
+                app.getCurrentUser().expenses.add(expense);
             }
-            if (mainActivity.expenseAdapter.getPosition(newExpense) < 0) {
-                mainActivity.expenseAdapter.insert(newExpense, 0);
+            if (mainActivity.expenseAdapter.getPosition(expense) < 0) {
+                mainActivity.expenseAdapter.insert(expense, 0);
             }
-            if (newExpense.deleteMe) {
-                mainActivity.expenseAdapter.remove(newExpense);
-                app.getCurrentUser().expenses.remove(newExpense);
+            if (expense.deleteMe) {
+                mainActivity.expenseAdapter.remove(expense);
+                app.getCurrentUser().expenses.remove(expense);
             }
             mainActivity.updateSelectedUser();
             mainActivity.expenseAdapter.notifyDataSetChanged();

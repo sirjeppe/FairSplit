@@ -27,7 +27,7 @@ public class PopupIncome {
     public void showIncomePopup() {
         AlertDialog.Builder alert = new AlertDialog.Builder(mainActivity);
         LayoutInflater inflater = mainActivity.getLayoutInflater();
-        final View dialogView = inflater.inflate(R.layout.setting_income_popup, null);
+        final View dialogView = inflater.inflate(R.layout.popup_income, null);
 
         EditText incomeEdit = dialogView.findViewById(R.id.income);
         incomeEdit.setText(String.format(Locale.US, "%d", app.getCurrentUser().income));
@@ -56,7 +56,7 @@ public class PopupIncome {
         alertDialog.show();
     }
 
-    public class PostUserTask extends AsyncTask<User, Void, Boolean> {
+    private class PostUserTask extends AsyncTask<User, Void, Boolean> {
         protected Boolean doInBackground(User... user) {
             try {
                 User toPost = user[0];

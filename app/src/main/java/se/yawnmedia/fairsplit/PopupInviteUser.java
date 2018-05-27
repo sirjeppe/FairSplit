@@ -28,7 +28,7 @@ public class PopupInviteUser {
     public void showInviteUserPopup() {
         AlertDialog.Builder alert = new AlertDialog.Builder(mainActivity);
         LayoutInflater inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View dialogView = inflater.inflate(R.layout.invite_user_popup, null);
+        final View dialogView = inflater.inflate(R.layout.popup_invite_user, null);
 
         alert.setView(dialogView);
         alert.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
