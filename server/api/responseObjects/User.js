@@ -186,7 +186,7 @@ class User {
       } else {
         callback(false);
       }
-    }
+    });
   }
 }
 
