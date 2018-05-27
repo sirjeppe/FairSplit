@@ -169,12 +169,12 @@ class User {
     );
   }
 
-  setSalary(income, callback) {
-    _validateAPIKeyAgainstUserID((valid) => {
+  save(callback) {
+    this._validateAPIKeyAgainstUserID((valid) => {
       if (valid) {
         this.db.run(
           'UPDATE users SET income = ? WHERE userID = ?',
-          [income, userID],
+          [this.income, this.userID],
           function(err) {
             if (err) {
               callback(err);

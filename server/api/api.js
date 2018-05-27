@@ -261,9 +261,12 @@ let api = {
       } else {
         let u = new User.User();
         u.useDB(db);
+        // userID and apiKey are needed for validation
         u.userID = userID;
         u.apiKey = request.headers['fairsplit-apikey'];
-        u.setSalary(body.income, (res) => {
+        // income can be updated
+        u.income = body.income;
+        u.save((res) => {
           callback(res);
         });
       }
@@ -378,7 +381,7 @@ let api = {
         t.comment = body.comment;
         t.groupID = body.groupID;
         t.userID = body.userID;
-        t.save((res) => {
+        t.save(request.headers['fairsplit-apikey'], (res) => {
           callback(res);
         });
       }
