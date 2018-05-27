@@ -171,11 +171,12 @@ class User {
   }
 
   save(callback) {
+    let that = this;
     this._validateAPIKeyAgainstUserID((valid) => {
       if (valid) {
-        this.db.run(
-          'UPDATE users SET income = ? WHERE userID = ?',
-          [this.income, this.userID],
+        that.db.run(
+          'UPDATE users SET income=? WHERE userID=?',
+          [that.income, that.userID],
           function(err) {
             if (err) {
               callback(err);

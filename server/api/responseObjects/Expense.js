@@ -23,7 +23,7 @@ class Expense {
   _validateAPIKeyAgainstOwner(apiKey, callback) {
     let that = this;
     this.db.get(
-      'SELECT userID FROM users WHERE apiKey = ?',
+      'SELECT userID FROM users WHERE apiKey=?',
       [apiKey],
       function(err, row) {
         if (err) {
@@ -48,13 +48,13 @@ class Expense {
   }
 
   save(apiKey, callback) {
+    let that = this;
     this._validateAPIKeyAgainstOwner(apiKey, (valid) => {
       if (valid) {
-        let that = this;
-        if (this.expenseID > 0) {
-          this.db.run(
+        if (that.expenseID > 0) {
+          that.db.run(
             'UPDATE expenses SET amount=?, title=?, comment=? WHERE expenseID=?',
-            [this.amount, this.title, this.comment, this.expenseID],
+            [that.amount, that.title, that.comment, that.expenseID],
             function(err) {
               if (err) {
                 callback(err);
@@ -64,15 +64,15 @@ class Expense {
             }
           );
         } else {
-          this.datetime = Math.floor(Date.now() / 1000);
-          this.db.run(
+          that.datetime = Math.floor(Date.now() / 1000);
+          that.db.run(
             'INSERT INTO expenses (amount, title, comment, groupID, userID, datetime) VALUES (?, ?, ?, ?, ?, ?)',
-            [this.amount, this.title, this.comment, this.groupID, this.userID, this.datetime],
+            [that.amount, that.title, that.comment, that.groupID, that.userID, that.datetime],
             function(err) {
               if (err) {
                 callback(err.message);
               } else {
-                that.expenseID = this.lastID;
+                that.expenseID = that.lastID;
                 callback(that);
               }
             }
