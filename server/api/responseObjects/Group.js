@@ -63,11 +63,12 @@ class Group {
   }
 
   save(apiKey, callback) {
+    let that = this;
     this._validateAPIKeyAgainstOwner(apiKey, (valid) => {
       if (valid) {
-        this.db.run(
+        that.db.run(
           'UPDATE groups SET groupName = ?, members = ? WHERE groupID = ?'
-          [this.groupName.trim(), this.members.join(','), this.groupID],
+          [that.groupName.trim(), that.members.join(','), that.groupID],
           function(err) {
             if (err) {
               callback(false);
@@ -75,7 +76,7 @@ class Group {
               callback(true);
             }
           }
-        )
+        );
       } else {
         callback(false);
       }
