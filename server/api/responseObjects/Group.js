@@ -67,7 +67,7 @@ class Group {
       if (valid) {
         this.db.run(
           'UPDATE groups SET groupName = ?, members = ? WHERE groupID = ?'
-          [trim(this.groupName), this.members.join(','), this.groupID],
+          [this.groupName.trim(), this.members.join(','), this.groupID],
           function(err) {
             if (err) {
               callback(false);

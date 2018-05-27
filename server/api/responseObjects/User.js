@@ -60,7 +60,7 @@ class User {
 
   login(userName, password, callback) {
     let that = this;
-    userName = trim(userName);
+    userName = userName.trim();
     this.db.get('SELECT * FROM users WHERE userName=?', [userName], function(err, row) {
       if (err) {
         callback(err);
@@ -100,7 +100,7 @@ class User {
 
   register(userName, password, callback) {
     let that = this;
-    userName = trim(userName);
+    userName = userName.trim();
     let hash = crypto.createHash('sha256');
     hash.update(password);
     let apiKey = this._generateAPIKey();
