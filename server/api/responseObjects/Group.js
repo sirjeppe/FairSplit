@@ -68,7 +68,7 @@ class Group {
     this._validateAPIKeyAgainstOwner(apiKey, (valid) => {
       if (valid) {
         that.db.run(
-          'UPDATE groups SET groupName=?, members=? WHERE groupID=?'
+          'UPDATE groups SET groupName=?, members=? WHERE groupID=?',
           [that.groupName.trim(), that.members.join(','), that.groupID],
           function(err) {
             if (err) {
