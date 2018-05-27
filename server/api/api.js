@@ -280,7 +280,6 @@ let api = {
       ) {
         callback(Error.ErrorCodes.MALFORMED_REQUEST);
       } else {
-        if () {
         let g = new Group.Group();
         g.useDB(db);
         g.getByID(groupID, (res) => {
