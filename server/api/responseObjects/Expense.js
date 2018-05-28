@@ -122,7 +122,7 @@ class Expense {
 
   static getAllByUserID(db, userID, callback) {
     db.all(
-      'SELECT * FROM expenses WHERE userID=?',
+      'SELECT * FROM expenses WHERE userID=? ORDER BY datetime DESC',
       [userID],
       function(err, rows) {
         if (err) {

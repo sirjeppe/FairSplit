@@ -256,7 +256,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
                 for (Expense expense : app.getSelectedUser().expenses) {
-                    expenseAdapter.insert(expense, 0);
+                    expenseAdapter.add(expense);
                 }
                 expenseAdapter.notifyDataSetChanged();
             }
@@ -310,7 +310,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     RadioButton userRadioButton = view.findViewById(R.id.userRadioButton);
                     User user = (User) userRadioButton.getTag();
-                    app.setSelectedUser(user);
+                    switchUser(user);
                     viewPager.setCurrentItem(0);
                     actionButton.setOnClickListener(addExpenseListener);
                     }
@@ -370,19 +370,13 @@ public class MainActivity extends AppCompatActivity {
         selectedUserExpensesTotal.setText(String.format("%.2f", app.getSelectedUser().sumExpenses()));
     }
 
-    private void switchUser(String user) {
-        for (int memberID : app.getCurrentGroup().members) {
-            User groupUser = User.findUserByID(memberID, app.getAllUsers());
-            if (groupUser != null && groupUser.userName.equals(user)) {
-                expenseAdapter.clear();
-                for (Expense expense : groupUser.expenses) {
-                    expenseAdapter.insert(expense, 0);
-                }
-                expenseAdapter.notifyDataSetChanged();
-                updateSelectedUser();
-                return;
-            }
+    private void switchUser(User user) {
+        expenseAdapter.clear();
+        for (Expense expense : user.expenses) {
+            expenseAdapter.add(expense);
         }
+        expenseAdapter.notifyDataSetChanged();
+        app.setSelectedUser(user);
     }
 
     // Action button listeners

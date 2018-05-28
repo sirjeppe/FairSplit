@@ -222,7 +222,7 @@ public class PopupExpense {
         // Safety net
         if (app.getSelectedUser() == app.getCurrentUser()) {
             if (!app.getCurrentUser().expenses.contains(expense)) {
-                app.getCurrentUser().expenses.add(expense);
+                app.getCurrentUser().expenses.add(0, expense);
             }
             if (mainActivity.expenseAdapter.getPosition(expense) < 0) {
                 mainActivity.expenseAdapter.insert(expense, 0);
