@@ -354,7 +354,7 @@ let api = {
         t.comment = body.comment;
         t.groupID = body.groupID;
         t.userID = body.userID;
-        t.save((res) => {
+        t.save(request.headers['fairsplit-apikey'], (res) => {
           callback(res);
         });
       }
