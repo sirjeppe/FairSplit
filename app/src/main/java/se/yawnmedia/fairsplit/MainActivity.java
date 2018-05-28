@@ -159,7 +159,11 @@ public class MainActivity extends AppCompatActivity {
                 switch (position) {
                     case 0:
                         actionButton.setOnClickListener(addExpenseListener);
-                        actionButton.setVisibility(View.VISIBLE);
+                        if (app.getSelectedUser() == app.getCurrentUser()) {
+                            actionButton.setVisibility(View.VISIBLE);
+                        } else {
+                            actionButton.setVisibility(View.GONE);
+                        }
                         break;
 
                     case 1:
@@ -169,7 +173,11 @@ public class MainActivity extends AppCompatActivity {
 
                     case 2:
                         actionButton.setOnClickListener(inviteUserListener);
-                        actionButton.setVisibility(View.VISIBLE);
+                        if (app.getCurrentGroup().owner == app.getCurrentUser().userID) {
+                            actionButton.setVisibility(View.VISIBLE);
+                        } else {
+                            actionButton.setVisibility(View.GONE);
+                        }
                         break;
 
                     case 3:
