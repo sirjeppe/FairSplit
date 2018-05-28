@@ -16,15 +16,15 @@ public class Expense {
 
     public Expense() {}
 
-    public Expense(JSONObject transaction) {
+    public Expense(JSONObject expense) {
         try {
-            this.expenseID = transaction.getLong("expenseID");
-            this.groupID = transaction.getLong("groupID");
-            this.userID = transaction.getLong("userID");
-            this.amount = transaction.getDouble("amount");
-            this.title = transaction.getString("title");
-            this.comment = transaction.getString("comment");
-            this.datetime = transaction.getLong("datetime");
+            this.expenseID = expense.getLong("expenseID");
+            this.groupID = expense.getLong("groupID");
+            this.userID = expense.getLong("userID");
+            this.amount = expense.getDouble("amount");
+            this.title = expense.getString("title");
+            this.comment = expense.getString("comment");
+            this.datetime = expense.getLong("datetime");
         } catch (Exception ex) {
             Log.e("Expense(JSONObject)", ex.getMessage());
         }

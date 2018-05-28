@@ -72,7 +72,7 @@ class Expense {
               if (err) {
                 callback(err.message);
               } else {
-                that.expenseID = that.lastID;
+                that.expenseID = this.lastID;
                 callback(that);
               }
             }
