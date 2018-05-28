@@ -57,10 +57,11 @@ public class User {
         return user;
     }
 
-    public static User findUserByID(int userID, ArrayList<User> users) {
-        for (int i = 0; i < users.size(); i++) {
-            if (users.get(i).userID == userID) {
-                return users.get(i);
+    public static User findUserByID(FairSplit app, int userID) {
+        ArrayList<User> allUsers = app.getAllUsers();
+        for (int i = 0; i < allUsers.size(); i++) {
+            if (allUsers.get(i).userID == userID) {
+                return allUsers.get(i);
             }
         }
         return null;

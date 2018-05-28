@@ -231,7 +231,7 @@ public class PopupExpense {
                 mainActivity.expenseAdapter.remove(expense);
                 app.getCurrentUser().expenses.remove(expense);
             }
-            mainActivity.updateSelectedUser();
+            mainActivity.updateSumWrapper();
             mainActivity.expenseAdapter.notifyDataSetChanged();
         }
     }

@@ -1,33 +1,21 @@
 package se.yawnmedia.fairsplit;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
-import org.json.JSONObject;
 
 import java.util.Locale;
 
@@ -239,7 +227,7 @@ public class MainActivity extends AppCompatActivity {
             // Expenses part
             if (position == 0) {
                 // Show who's selected and total expenses
-                updateSelectedUser();
+                updateSumWrapper();
 
                 final PopupExpense pe = new PopupExpense(app);
 
@@ -280,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     RadioButton groupRadioButton = view.findViewById(R.id.groupRadioButton);
                     Group group = (Group) groupRadioButton.getTag();
-                    app.setCurrentGroup(group);
+                    switchGroup(group);
                     viewPager.setCurrentItem(0);
                     actionButton.setOnClickListener(addExpenseListener);
                     }
@@ -371,11 +359,27 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void updateSelectedUser() {
+    public void updateSumWrapper() {
+        // Group info
+        TextView selectedGroupName = findViewById(R.id.selected_group);
+        TextView selectedGroupOwner = findViewById(R.id.selected_group_owner);
+        selectedGroupName.setText(app.getCurrentGroup().groupName);
+        selectedGroupOwner.setText(User.findUserByID(app, app.getCurrentGroup().owner).userName);
+
+        // User info
         TextView selectedUserName = findViewById(R.id.selected_user_name);
         TextView selectedUserExpensesTotal = findViewById(R.id.selected_user_expenses_total);
         selectedUserName.setText(app.getSelectedUser().userName);
         selectedUserExpensesTotal.setText(String.format("%.2f", app.getSelectedUser().sumExpenses()));
+    }
+
+    private void switchGroup(Group group) {
+        app.setCurrentGroup(group);
+        // Make sure a user that is actually a member of the group is selected when switching groups
+        if (!group.members.contains(app.getSelectedUser().userID)) {
+            app.setSelectedUser(app.getCurrentUser());
+        }
+        updateSumWrapper();
     }
 
     private void switchUser(User user) {

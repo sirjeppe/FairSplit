@@ -23,8 +23,10 @@
     <string name="tabname_settings">Settings</string>
 
     <!-- Pager texts -->
+    <string name="selected_group_text">Selected group:</string>
+    <string name="selected_group_owner_text">Group owner:</string>
     <string name="selected_user_text">Showing expenses for:</string>
-    <string name="selected_user_expense_total">Expenses total</string>
+    <string name="selected_user_expense_total_text">Expenses total:</string>
     <string name="select_group">Select group</string>
     <string name="select_user">Select user</string>
     <string name="settings">Settings</string>
