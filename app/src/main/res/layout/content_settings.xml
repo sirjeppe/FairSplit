@@ -33,7 +33,7 @@
         tools:context="se.yawnmedia.fairsplit.MainActivity">
 
         <TextView
-            android:id="@+id/setting_salary_title"
+            android:id="@+id/setting_income_title"
             android:layout_width="228dp"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="false"
@@ -51,11 +51,11 @@
             android:textSize="22sp"/>
 
         <TextView
-            android:id="@+id/setting_salary_comment"
+            android:id="@+id/setting_income_comment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
-            android:layout_below="@id/setting_salary_title"
+            android:layout_below="@id/setting_income_title"
             android:text="@string/setting_income_comment"
             android:textColor="#ffaaaaaa"/>
 
