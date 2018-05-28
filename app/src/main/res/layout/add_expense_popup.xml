@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
-    android:id="@+id/transactionPopup"
+    android:id="@+id/expense_popup"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -8,7 +8,7 @@
     android:padding="15dp">
 
     <EditText
-        android:id="@+id/popupAmount"
+        android:id="@+id/popup_amount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -17,7 +17,7 @@
         android:textSize="25dp"/>
 
     <EditText
-        android:id="@+id/popupTitle"
+        android:id="@+id/popup_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"
@@ -26,7 +26,7 @@
         android:inputType="textCapSentences"/>
 
     <EditText
-        android:id="@+id/popupComment"
+        android:id="@+id/popup_comment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="1"

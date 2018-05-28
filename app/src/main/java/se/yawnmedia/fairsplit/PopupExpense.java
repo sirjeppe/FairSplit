@@ -1,7 +1,6 @@
 package se.yawnmedia.fairsplit;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
@@ -40,9 +39,9 @@ public class PopupExpense {
 
         LayoutInflater inflater = mainActivity.getLayoutInflater();
         final View dialogView = inflater.inflate(R.layout.add_expense_popup, null);
-        final EditText popupAmount = dialogView.findViewById(R.id.popupAmount);
-        final EditText popupTitle = dialogView.findViewById(R.id.popupTitle);
-        final EditText popupComment = dialogView.findViewById(R.id.popupComment);
+        final EditText popupAmount = dialogView.findViewById(R.id.popup_amount);
+        final EditText popupTitle = dialogView.findViewById(R.id.popup_title);
+        final EditText popupComment = dialogView.findViewById(R.id.popup_comment);
 
         if (expense != null) {
             popupAmount.setText(String.format(Locale.US, "%.2f", expense.amount));

@@ -29,7 +29,7 @@
         android:layout_toLeftOf="@id/top_groups_group">
 
         <ImageView
-            android:id="@+id/action_list_transactions"
+            android:id="@+id/action_list_expenses"
             android:layout_width="30dp"
             android:layout_height="30dp"
             android:background="@drawable/ic_format_list_bulleted_black_24dp"
