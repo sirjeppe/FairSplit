@@ -12,11 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import org.json.JSONObject;
-
-import java.util.Locale;
 
 public class PopupGroup {
     private FairSplit app;
@@ -34,7 +31,7 @@ public class PopupGroup {
         LayoutInflater inflater = (LayoutInflater) mainActivity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View dialogView = inflater.inflate(R.layout.popup_group, null);
 
-        final EditText groupNameEdit = dialogView.findViewById(R.id.group_name);
+        final EditText groupNameEdit = dialogView.findViewById(R.id.user_name);
         if (group != null) {
             groupNameEdit.setText(group.groupName);
             groupNameEdit.setSelection(groupNameEdit.getText().length());

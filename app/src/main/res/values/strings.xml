@@ -24,11 +24,11 @@
 
     <!-- Pager texts -->
     <string name="selected_group_text">Selected group:</string>
-    <string name="selected_group_owner_text">Group owner:</string>
     <string name="selected_user_text">Showing expenses for:</string>
     <string name="selected_user_expense_total_text">Expenses total:</string>
-    <string name="select_group">Select group</string>
-    <string name="select_user">Select user</string>
+    <string name="split_fairly_button">Split fairly</string>
+    <string name="groups_header">Select group from the list below.\nCreate a new group by press the (+) icon.</string>
+    <string name="users_header">To change which user\'s expenses you are viewing,\nselect a user from the list below.\nTo invite a user to your group, press the (+) icon.</string>
     <string name="settings">Settings</string>
 
     <!-- Expense popup -->

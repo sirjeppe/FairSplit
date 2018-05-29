@@ -10,6 +10,7 @@
     <color name="toolbar_background">#fff4f4f4</color>
     <color name="text_color">#666</color>
     <color name="text_color_inverted">#ddd</color>
+    <color name="page_background">#ddd</color>
     <color name="item_background">#fff</color>
     <color name="item_background_pressed">#a6b2cb</color>
 </resources>

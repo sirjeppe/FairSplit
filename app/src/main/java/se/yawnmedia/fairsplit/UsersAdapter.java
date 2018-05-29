@@ -14,6 +14,7 @@ public class UsersAdapter extends ArrayAdapter<User> {
 
     private static class ViewHolder {
         RadioButton userRadioButton;
+        TextView userName;
     }
 
     public UsersAdapter(@NonNull Context context, int resource) {
@@ -30,13 +31,14 @@ public class UsersAdapter extends ArrayAdapter<User> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.user_item, parent, false);
-            viewHolder.userRadioButton = convertView.findViewById(R.id.userRadioButton);
+            viewHolder.userRadioButton = convertView.findViewById(R.id.user_radio_button);
+            viewHolder.userName = convertView.findViewById(R.id.user_name);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.userRadioButton.setText(user.userName);
+        viewHolder.userName.setText(user.userName);
 
         if (user == app.getSelectedUser()) {
             viewHolder.userRadioButton.setChecked(true);

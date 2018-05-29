@@ -266,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
                 groupsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    RadioButton groupRadioButton = view.findViewById(R.id.groupRadioButton);
+                    RadioButton groupRadioButton = view.findViewById(R.id.group_radio_button);
                     Group group = (Group) groupRadioButton.getTag();
                     switchGroup(group);
                     viewPager.setCurrentItem(0);
@@ -276,7 +276,7 @@ public class MainActivity extends AppCompatActivity {
                 groupsListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                     @Override
                     public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                        RadioButton groupRadioButton = view.findViewById(R.id.groupRadioButton);
+                        RadioButton groupRadioButton = view.findViewById(R.id.group_radio_button);
                         final Group group = (Group) groupRadioButton.getTag();
 
                         // Only allow modifications by group owner
@@ -304,7 +304,7 @@ public class MainActivity extends AppCompatActivity {
                 usersListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    RadioButton userRadioButton = view.findViewById(R.id.userRadioButton);
+                    RadioButton userRadioButton = view.findViewById(R.id.user_radio_button);
                     User user = (User) userRadioButton.getTag();
                     switchUser(user);
                     viewPager.setCurrentItem(0);
@@ -362,9 +362,7 @@ public class MainActivity extends AppCompatActivity {
     public void updateSumWrapper() {
         // Group info
         TextView selectedGroupName = findViewById(R.id.selected_group);
-        TextView selectedGroupOwner = findViewById(R.id.selected_group_owner);
         selectedGroupName.setText(app.getCurrentGroup().groupName);
-        selectedGroupOwner.setText(User.findUserByID(app, app.getCurrentGroup().owner).userName);
 
         // User info
         TextView selectedUserName = findViewById(R.id.selected_user_name);

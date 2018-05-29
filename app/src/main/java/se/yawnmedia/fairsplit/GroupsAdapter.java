@@ -14,6 +14,8 @@ public class GroupsAdapter extends ArrayAdapter<Group> {
 
     private static class ViewHolder {
         RadioButton groupRadioButton;
+        TextView groupName;
+        TextView groupOwner;
     }
 
     public GroupsAdapter(@NonNull Context context, int resource) {
@@ -30,13 +32,18 @@ public class GroupsAdapter extends ArrayAdapter<Group> {
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.group_item, parent, false);
-            viewHolder.groupRadioButton = convertView.findViewById(R.id.groupRadioButton);
+            viewHolder.groupRadioButton = convertView.findViewById(R.id.group_radio_button);
+            viewHolder.groupName = convertView.findViewById(R.id.user_name);
+            viewHolder.groupOwner = convertView.findViewById(R.id.group_owner);
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.groupRadioButton.setText(group.groupName);
+        viewHolder.groupName.setText(group.groupName);
+        viewHolder.groupOwner.setText(
+            String.format("by %s", User.findUserByID(app, group.owner).userName)
+        );
 
         if (group == app.getCurrentGroup()) {
             viewHolder.groupRadioButton.setChecked(true);

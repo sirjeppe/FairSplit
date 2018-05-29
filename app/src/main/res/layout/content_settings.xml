@@ -4,11 +4,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ddd"
+    android:background="@color/page_background"
     android:padding="5dp">
 
     <TextView
-        android:id="@+id/settings_general_header"
+        android:id="@+id/groups_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
@@ -23,7 +23,7 @@
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/settings_general_header"
+        android:layout_below="@+id/groups_header"
         android:background="@drawable/item_background"
         android:clickable="true"
         android:paddingBottom="10dp"

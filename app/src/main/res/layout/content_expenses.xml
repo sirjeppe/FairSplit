@@ -5,121 +5,106 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ddd"
+    android:background="@color/page_background"
+    android:isScrollContainer="true"
+    android:padding="5dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="se.yawnmedia.fairsplit.MainActivity">
 
     <RelativeLayout
+        android:id="@+id/sum_wrapper"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="5dp"
+        android:background="#666"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <RelativeLayout
-            android:id="@+id/sum_wrapper"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/user_name_text"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:background="#666"
-            android:paddingBottom="10dp"
-            android:paddingEnd="10dp"
-            android:paddingStart="10dp"
-            android:paddingTop="5dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/selected_user_text"
+            android:textColor="@color/text_color_inverted"
+            android:textSize="10dp"/>
 
-            <TextView
-                android:id="@+id/selected_group_header"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:text="@string/selected_group_text"
-                android:textColor="@color/text_color_inverted"
-                android:textSize="10dp"/>
-
-            <TextView
-                android:id="@+id/selected_group"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@id/selected_group_header"
-                android:layout_marginBottom="10dp"
-                android:textColor="@color/text_color_inverted"
-                android:textSize="22dp"
-                tools:text="Household"/>
-
-            <TextView
-                android:id="@+id/selected_group_owner_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:text="@string/selected_group_owner_text"
-                android:textColor="@color/text_color_inverted"
-                android:textSize="10dp"/>
-
-            <TextView
-                android:id="@+id/selected_group_owner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@+id/selected_group_owner_text"
-                android:layout_marginBottom="10dp"
-                android:textColor="@color/text_color_inverted"
-                android:textSize="22dp"
-                tools:text="sirjeppe"/>
-
-            <TextView
-                android:id="@+id/user_name_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/selected_group"
-                android:text="@string/selected_user_text"
-                android:textColor="@color/text_color_inverted"
-                android:textSize="10dp"/>
-
-            <TextView
-                android:id="@+id/selected_user_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentStart="true"
-                android:layout_below="@id/user_name_text"
-                android:textColor="@color/text_color_inverted"
-                android:textSize="22dp"
-                tools:text="sirjeppe"/>
-
-            <TextView
-                android:id="@+id/expenses_total_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@id/selected_group"
-                android:text="@string/selected_user_expense_total_text"
-                android:textColor="@color/text_color_inverted"
-                android:textSize="10dp"/>
-
-            <TextView
-                android:id="@+id/selected_user_expenses_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_below="@+id/expenses_total_text"
-                android:textColor="@color/text_color_inverted"
-                android:textSize="22dp"
-                tools:text="1500"/>
-        </RelativeLayout>
-
-        <ListView
-            android:id="@+id/expenses_list_view"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/selected_user_name"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/sum_wrapper"
-            android:divider="#00000000"
-            android:dividerHeight="5dp"
-            />
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/user_name_text"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/text_color_inverted"
+            android:textSize="22dp"
+            tools:text="sirjeppe"/>
 
+        <TextView
+            android:id="@+id/expenses_total_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:text="@string/selected_user_expense_total_text"
+            android:textColor="@color/text_color_inverted"
+            android:textSize="10dp"/>
+
+        <TextView
+            android:id="@+id/selected_user_expenses_total"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/expenses_total_text"
+            android:textColor="@color/text_color_inverted"
+            android:textSize="22dp"
+            tools:text="1500"/>
+
+        <TextView
+            android:id="@+id/selected_group_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/selected_user_name"
+            android:text="@string/selected_group_text"
+            android:textColor="@color/text_color_inverted"
+            android:textSize="10dp"/>
+
+        <TextView
+            android:id="@+id/selected_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@id/selected_group_header"
+            android:textColor="@color/text_color_inverted"
+            android:textSize="22dp"
+            tools:text="Household"/>
+
+        <Button
+            android:id="@+id/calculate_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/selected_group"
+            android:layout_alignParentEnd="true"
+            android:text="@string/split_fairly_button"/>
     </RelativeLayout>
+
+    <ListView
+        android:id="@+id/expenses_list_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="5dp"
+        android:divider="#00000000"
+        android:dividerHeight="5dp"
+        android:paddingBottom="@dimen/list_padding_bottom"
+        android:clipToPadding="false"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/sum_wrapper"/>
 
 </android.support.constraint.ConstraintLayout>
