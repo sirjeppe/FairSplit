@@ -31,6 +31,12 @@
     <string name="users_header">To change which user\'s expenses you are viewing,\nselect a user from the list below.\nTo invite a user to your group, press the (+) icon.</string>
     <string name="settings">Settings</string>
 
+    <!-- Invite texts -->
+    <string name="group_invite_header">Group invite</string>
+    <string name="invite_main_text">You have received an invite to join the group $1 by $2</string>
+    <string name="accept_invite">Accept</string>
+    <string name="decline_invite">Decline</string>
+
     <!-- Expense popup -->
     <string name="expense_title">Title</string>
     <string name="expense_amount">Amount</string>

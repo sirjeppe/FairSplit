@@ -3,6 +3,7 @@ package se.yawnmedia.fairsplit;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -328,6 +329,27 @@ public class MainActivity extends AppCompatActivity {
                     public void onClick(View view) {
                     PopupIncome pi = new PopupIncome(app);
                     pi.showIncomePopup();
+                    }
+                });
+
+                RelativeLayout settingLogout = findViewById(R.id.setting_logout);
+                settingLogout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        try {
+                            RESTHelper.GET(
+                                String.format(
+                                    "%s/%d/logout",
+                                    RESTHelper.userEndpoint,
+                                    app.getCurrentUser().userID
+                                ),
+                                app.getAPIKey(),
+                                MainActivity.this
+                            );
+                        }
+                        catch (Exception ex) {
+
+                        }
                     }
                 });
             }

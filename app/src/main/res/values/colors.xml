@@ -13,4 +13,5 @@
     <color name="page_background">#ddd</color>
     <color name="item_background">#fff</color>
     <color name="item_background_pressed">#a6b2cb</color>
+    <color name="invite_wrapper_background">#a6b2cb</color>
 </resources>

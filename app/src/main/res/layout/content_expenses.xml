@@ -91,7 +91,60 @@
             android:layout_alignBottom="@+id/selected_group"
             android:layout_alignParentEnd="true"
             android:text="@string/split_fairly_button"/>
+
     </RelativeLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/invite_wrapper"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@color/invite_wrapper_background"
+        android:paddingBottom="10dp"
+        android:paddingEnd="10dp"
+        android:paddingStart="10dp"
+        android:paddingTop="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/sum_wrapper"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/sum_wrapper">
+
+        <TextView
+            android:id="@+id/group_invite_header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/group_invite_header"
+            android:textSize="22dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/invite_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingBottom="10dp"
+            android:paddingTop="10dp"
+            android:text="@string/invite_main_text"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/group_invite_header" />
+
+        <Button
+            android:id="@+id/decline_invite_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/decline_invite"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/invite_text" />
+
+        <Button
+            android:id="@+id/accept_invite_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/accept_invite"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/invite_text" />
+    </android.support.constraint.ConstraintLayout>
 
     <ListView
         android:id="@+id/expenses_list_view"
@@ -105,6 +158,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/sum_wrapper"/>
+        app:layout_constraintTop_toBottomOf="@+id/invite_wrapper"/>
 
 </android.support.constraint.ConstraintLayout>
