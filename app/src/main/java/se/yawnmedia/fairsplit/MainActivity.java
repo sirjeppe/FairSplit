@@ -262,7 +262,13 @@ public class MainActivity extends AppCompatActivity {
             try {
                 String apiKey = transactionObject[0].apiKey;
                 JSONObject transaction = transactionObject[0].transaction;
-                return new Transaction(RESTHelper.DoRequest("POST", RESTHelper.transactionEndpoint, transaction, apiKey));
+                JSONObject response = RESTHelper.DoRequest("POST", RESTHelper.transactionEndpoint, transaction, apiKey);
+                if (response.has("errorCode") && (int) response.get("errorCode") != 0) {
+                    Snackbar.make(transactionListView, response.get("message").toString(), Snackbar.LENGTH_LONG).show();
+                } else {
+                    JSONObject responseTransaction = response.getJSONArray("data").getJSONObject(0);
+                    return new Transaction(responseTransaction);
+                }
             } catch (Exception ex) {
                 this.exception = ex;
             }

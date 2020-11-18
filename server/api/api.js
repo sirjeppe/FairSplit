@@ -112,7 +112,16 @@ let api = {
           } else if (handler === 'group') {
             api.group(db, request, response, body);
           } else if (handler === 'transaction') {
-            api.transaction(db, request, response, body);
+            api.transaction(db, request, response, body, (res) => {
+              if (res instanceof Transaction.Transaction) {
+                let r = new Transaction.TransactionResponse();
+                r.requestUri = request.url;
+                r.data.push(res);
+                api.respond(request, response, r);
+              } else {
+                api.respond(request, response, res);
+              }
+            });
           } else {
             api.respond(request, response, 'No handler found for request: ' + request.url);
           }
@@ -153,7 +162,11 @@ let api = {
   },
 
   register: function(db, request, response, body, callback) {
-    if (typeof(body.userName) === 'undefined' || typeof(body.password) === 'undefined' || typeof(body.passwordAgain) === 'undefined') {
+    if (
+      typeof(body.userName) === 'undefined'
+      || typeof(body.password) === 'undefined'
+      || typeof(body.passwordAgain) === 'undefined'
+    ) {
       callback(Error.ErrorCodes.MALFORMED_REQUEST);
     } else {
       if (body.password != body.passwordAgain) {
@@ -201,20 +214,22 @@ let api = {
     }
   },
 
-  transaction: function(db, request, response, body) {
+  transaction: function(db, request, response, body, callback) {
     if (request.method === 'POST') {
-      let t = new Transaction.Transaction(body.amount, body.comment);
-      t.useDB(db);
-      if (t) {
-        let r = new Transaction.TransactionResponse();
-        r.requestUri = request.url;
-
-        response.writeHead(200, {'Content-Type': 'application/json'});
-        response.write(JSON.stringify(r));
-        response.end();
-        return true;
+      if (
+        typeof(body.groupID) === 'undefined'
+        || typeof(body.userID) === 'undefined'
+        || typeof(body.amount) === 'undefined'
+        || typeof(body.title) === 'undefined'
+        || typeof(body.comment) === 'undefined'
+      ) {
+        callback(Error.ErrorCodes.MALFORMED_REQUEST);
       } else {
-        return 'User not found or password mismatch.';
+        let t = new Transaction.Transaction(body.groupID, body.userID, body.amount, body.title, body.comment);
+        t.useDB(db);
+        t.save((res) => {
+          callback(res);
+        });
       }
     }
   }
