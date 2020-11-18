@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.js",
   "dependencies": {
-    "npm": "^5.8.0",
+    "npm": "^7.0.12",
     "sqlite3": "^4.0.0"
   },
   "devDependencies": {},

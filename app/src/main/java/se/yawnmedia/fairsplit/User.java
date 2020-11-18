@@ -23,10 +23,9 @@ public class User {
             this.salary = user.getInt("salary");
             this.apiKey = user.getString("apiKey");
             this.keyValidTo = user.getLong("keyValidTo");
+            this.groups = new ArrayList<Integer>();
             JSONArray groups = user.getJSONArray("groups");
-            if (groups.length() == 0) {
-                this.groups = new ArrayList<Integer>();
-            } else {
+            if (groups.length() > 0) {
                 for (int g = 0; g < groups.length(); g++) {
                     this.groups.add(groups.getInt(g));
                 }
@@ -44,10 +43,9 @@ public class User {
             this.salary = userObject.getInt("salary");
             this.apiKey = userObject.getString("apiKey");
             this.keyValidTo = userObject.getLong("keyValidTo");
+            this.groups = new ArrayList<Integer>();
             JSONArray groups = userObject.getJSONArray("groups");
-            if (groups.length() == 0) {
-                this.groups = new ArrayList<Integer>();
-            } else {
+            if (groups.length() > 0) {
                 for (int g = 0; g < groups.length(); g++) {
                     this.groups.add(groups.getInt(g));
                 }
