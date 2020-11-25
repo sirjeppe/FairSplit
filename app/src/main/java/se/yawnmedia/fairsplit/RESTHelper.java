@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
+import java.net.SocketTimeoutException;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
@@ -37,13 +38,28 @@ public final class RESTHelper {
             urlConnection.setRequestProperty("fairsplit-apikey", apiKey);
         }
         urlConnection.setReadTimeout(10000);
-        urlConnection.setConnectTimeout(15000);
-        if (urlConnection.getRequestMethod().equals("POST") || urlConnection.getRequestMethod().equals("PUT")) {
+        urlConnection.setConnectTimeout(2000);
+        if (
+            urlConnection.getRequestMethod().equals("POST")
+            || urlConnection.getRequestMethod().equals("PUT")
+            || urlConnection.getRequestMethod().equals("DELETE")
+        ) {
             urlConnection.setDoOutput(true);
         }
-        urlConnection.connect();
+        try {
+            urlConnection.connect();
+        } catch (SocketTimeoutException ex) {
+            // Place in queue
+        }
 
-        if ((urlConnection.getRequestMethod().equals("POST") || urlConnection.getRequestMethod().equals("PUT")) && data != null) {
+        if (
+            (
+                urlConnection.getRequestMethod().equals("POST")
+                || urlConnection.getRequestMethod().equals("PUT")
+                || urlConnection.getRequestMethod().equals("DELETE")
+            )
+            && data != null
+        ) {
             OutputStream os = urlConnection.getOutputStream();
             os.write(data.toString().getBytes());
             os.flush();
@@ -103,7 +119,7 @@ public final class RESTHelper {
         loginData.put("password", password);
 
         // Try to login user
-        JSONObject response = RESTHelper.POST("/login", loginData, null, context);
+        JSONObject response = RESTHelper.POST("/user/login", loginData, null, context);
 
         if (response.has("errorCode") && (int) response.get("errorCode") != 0) {
             errorMessage = response.get("message").toString();

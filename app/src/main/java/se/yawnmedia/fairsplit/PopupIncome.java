@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import org.json.JSONObject;
 
+import java.net.SocketTimeoutException;
 import java.util.Locale;
 
 public class PopupIncome {

@@ -183,7 +183,7 @@ public class RegisterActivity extends AppCompatActivity implements LoaderCallbac
                 registerData.put("userName", loginName);
                 registerData.put("password", password);
                 registerData.put("passwordAgain", passwordAgain);
-                response = RESTHelper.POST("/register", registerData, null, RegisterActivity.this);
+                response = RESTHelper.POST("/user/register", registerData, null, RegisterActivity.this);
                 if (response.has("errorCode") && (int) response.get("errorCode") != 0) {
                     Snackbar.make(registerFormView, response.get("message").toString(), Snackbar.LENGTH_LONG).show();
                     return false;

@@ -91,6 +91,7 @@ public class PopupExpense {
         final AlertDialog alertDialog = alert.create();
 
         // Make sure OK button gets enabled when popupAmount and popupTitle aren't empty
+        // and for comment, when comment is changed
         popupAmount.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -127,6 +128,18 @@ public class PopupExpense {
                 } else {
                     alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
                 }
+            }
+        });
+        popupComment.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setEnabled(true);
             }
         });
 
@@ -176,7 +189,7 @@ public class PopupExpense {
                 // Delete existing expense
                 } else if (expense[0].deleteMe) {
                     JSONObject expenseResponse = RESTHelper.DELETE(
-                        RESTHelper.expenseEndpoint + "/" + expense[0].expenseID,
+                        RESTHelper.expenseEndpoint,
                         expenseJSON,
                         app.getCurrentUser().apiKey,
                         mainActivity
@@ -189,7 +202,7 @@ public class PopupExpense {
                 // Update existing expense
                 } else {
                     JSONObject expenseResponse = RESTHelper.PUT(
-                        RESTHelper.expenseEndpoint + "/" + expense[0].expenseID,
+                        RESTHelper.expenseEndpoint,
                         expenseJSON,
                         app.getCurrentUser().apiKey,
                         mainActivity
