@@ -1,4 +1,4 @@
-let BaseResponse = require('./BaseResponse.js');
+const BaseResponse = require('./base-response.class.js');
 
 const ErrorCodes = {
     // 100-199: API errors
@@ -36,4 +36,4 @@ module.exports = {
     'Error': Error,
     'ErrorCodes': ErrorCodes,
     'ErrorMessages': ErrorMessages
-}
+};

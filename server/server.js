@@ -11,17 +11,19 @@ const port = 54321;
 // If db folder doesn't exist - run server config/setup
 if (!fs.existsSync(config['dbFolder'])) {
   fs.mkdirSync(config['dbFolder']);
-  let files = fs.readdirSync(config['configFolder']);
+  const files = fs.readdirSync(config['configFolder']);
   for (let i = 0; i < files.length; i++) {
-    let configFile = [config['configFolder'], files[i]].join('/');
-    let temp = require(configFile);
+    const configFile = [config['configFolder'], files[i]].join('/');
+    const temp = require(configFile);
     for (let m in temp) {
       temp[m].call();
     }
   }
 }
 
-let db = new sqlite3.Database(path.join(process.cwd(), config['dbFolder'], 'db.db'));
+const db = new sqlite3.Database(path.join(process.cwd(), config['dbFolder'], 'db.db'));
+const API = require('./api/api.js');
+const api = new API(db);
 
 process.on('SIGINT', function() {
   console.log('Shutting down...');
@@ -29,16 +31,15 @@ process.on('SIGINT', function() {
   process.exit();
 });
 
-let server = function(request, response) {
+const server = function(request, response) {
   let uri = url.parse(request.url).pathname;
 
   if (uri.startsWith('/api/')) {
 
     // Do API parsing
-    delete require.cache[require.resolve('./api/api.js')];
     try {
-      let api = require('./api/api.js');
-      api.handle(db, request, response);
+      api.route(request, response);
+      // api.handle(db, request, response);
     } catch (err) {
       console.error(err);
     }
@@ -47,8 +48,8 @@ let server = function(request, response) {
 
     let filename = path.join(process.cwd(), 'html', uri);
 
-    fs.exists(filename, function(exists) {
-      if (!exists) {
+    fs.stat(filename, function(err, stats) {
+      if (!stats) {
         response.writeHead(404, {'Content-Type': 'text/plain'});
         response.write('404 Not Found\n');
         response.end();
