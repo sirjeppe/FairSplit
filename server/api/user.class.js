@@ -138,15 +138,18 @@ class User extends BackendModule {
                 if (err) {
                   cls.respond(request, response, err);
                 } else {
-                  uResData.groups.push(this.lastID);
+                  let groupID = this.lastID;
+                  uResData.groups.push(groupID);
                   cls.api.db.run(
                     'UPDATE users SET groups=? WHERE userID=?',
-                    [uResData.groups.join(','), uResData.userID],
+                    [groupID, uResData.userID],
                     function(err) {
                       if (err) {
                         cls.respond(request, response, err);
                       } else {
-                        cls.respond(request, response, uResData);
+                        let responseObject = new ur.UserResponse();
+                        responseObject.data.push(uResData);
+                        cls.respond(request, response, responseObject);
                       }
                     }
                   );
